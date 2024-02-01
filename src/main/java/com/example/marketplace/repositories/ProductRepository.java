@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findAll(Pageable pageable);
+
     Boolean existsByNameIgnoreCase(String name);
 
 //    @Query("SELECT p FROM Product p " +

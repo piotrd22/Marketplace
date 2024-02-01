@@ -20,7 +20,6 @@ public abstract class CategoryMapper {
         updater.update(category, updateCategoryDto);
     }
 
-
     @Mapper(
             componentModel = "spring",
             unmappedSourcePolicy = ReportingPolicy.ERROR,
