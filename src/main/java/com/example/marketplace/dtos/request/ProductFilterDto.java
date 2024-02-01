@@ -1,4 +1,4 @@
-package com.example.marketplace.dtos.filter;
+package com.example.marketplace.dtos.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

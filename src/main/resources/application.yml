@@ -9,7 +9,8 @@ spring:
     password: password
   jpa:
     hibernate:
-      ddl-auto: update
+#     only for dev purposes
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

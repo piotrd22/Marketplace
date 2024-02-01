@@ -1,12 +1,13 @@
 package com.example.marketplace.services.product;
 
-import com.example.marketplace.dtos.filter.ProductFilterDto;
-import com.example.marketplace.exceptions.AlreadyExistsException;
+import com.example.marketplace.dtos.request.AddProductDto;
+import com.example.marketplace.dtos.request.ProductFilterDto;
+import com.example.marketplace.dtos.request.UpdateProductDto;
+import com.example.marketplace.dtos.response.ProductDto;
 import com.example.marketplace.exceptions.NotFoundException;
-import com.example.marketplace.models.Category;
+import com.example.marketplace.mappers.ProductMapper;
 import com.example.marketplace.models.Product;
 import com.example.marketplace.repositories.ProductRepository;
-import com.example.marketplace.services.category.CategoryService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -16,50 +17,52 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final CategoryService categoryService;
+    private final ProductMapper productMapper;
 
-    public ProductServiceImpl(ProductRepository productRepository, CategoryService categoryService) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
-        this.categoryService = categoryService;
+        this.productMapper = productMapper;
     }
 
     @Override
-    public Product getProduct(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Product"));
+    public ProductDto getProduct(Long id) {
+        Product product = getProductById(id);
+        return productMapper.productToProductDto(product);
     }
 
     @Override
-    public List<Product> getAllProducts(Pageable pageable) {
-        return productRepository.findAll(pageable).getContent();
+    public List<ProductDto> getProducts(Pageable pageable) {
+        List<Product> products = productRepository.findAll(pageable).getContent();
+        return products.stream().map(productMapper::productToProductDto).toList();
     }
 
     @Override
-    public Product addProduct(Product product) {
-        if (productRepository.existsByNameIgnoreCase(product.getName())) {
-            throw new AlreadyExistsException("Product with name '%s' already exists".formatted(product.getName()));
-        }
-
-        List<Long> categoryIds = product.getCategories().stream().map(Category::getId).toList();
-        if (categoryService.allCategoriesExist(categoryIds)) {
-            throw new NotFoundException("Some categories do not exist: " + categoryIds);
-        }
-
-        return productRepository.save(product);
+    public ProductDto addProduct(AddProductDto dto) {
+        Product product = productMapper.addProductDtoToProduct(dto);
+        product = productRepository.save(product);
+        return productMapper.productToProductDto(product);
     }
 
     @Override
-    public Product updateProduct(Product updatedProduct) {
-        return productRepository.save(updatedProduct);
+    public ProductDto updateProduct(Long id, UpdateProductDto dto) {
+        Product product = getProductById(id);
+       productMapper.updateProduct(product, dto);
+       product = productRepository.save(product);
+       return productMapper.productToProductDto(product);
     }
 
     @Override
     public void deleteProduct(Long id) {
-        Product product = getProduct(id);
+        Product product = getProductById(id);
         productRepository.delete(product);
     }
 
     @Override
-    public List<Product> searchProducts(ProductFilterDto filterDto, Pageable pageable) {
+    public List<ProductDto> searchProducts(ProductFilterDto filterDto, Pageable pageable) {
         return null;
+    }
+
+    private Product getProductById(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Product"));
     }
 }

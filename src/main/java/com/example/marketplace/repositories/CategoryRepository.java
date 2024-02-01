@@ -6,12 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Boolean existsByNameIgnoreCase(String name);
-
-    @Query("SELECT c FROM Category c WHERE c.id IN :ids")
-    List<Category> findAllByIds(@Param("ids") List<Long> ids);
 }

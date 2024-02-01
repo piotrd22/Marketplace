@@ -1,54 +1,66 @@
 package com.example.marketplace.services.category;
 
+import com.example.marketplace.dtos.request.AddCategoryDto;
+import com.example.marketplace.dtos.request.UpdateCategoryDto;
+import com.example.marketplace.dtos.response.CategoryDto;
 import com.example.marketplace.exceptions.AlreadyExistsException;
 import com.example.marketplace.exceptions.NotFoundException;
+import com.example.marketplace.mappers.CategoryMapper;
 import com.example.marketplace.models.Category;
 import com.example.marketplace.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
     }
 
     @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public List<CategoryDto> getAllCategories() {
+        return categoryRepository.findAll().stream().map(categoryMapper::categoryToCategoryDto).toList();
     }
 
     @Override
-    public Category getCategory(Long id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Category"));
+    public CategoryDto getCategory(Long id) {
+        Category category = getCategoryById(id);
+        return categoryMapper.categoryToCategoryDto(category);
     }
 
     @Override
-    public Category addCategory(Category category) {
-        if (categoryRepository.existsByNameIgnoreCase(category.getName())) {
-            throw new AlreadyExistsException("Category with name '%s' already exists".formatted(category.getName()));
+    public CategoryDto addCategory(AddCategoryDto dto) {
+        if (categoryRepository.existsByNameIgnoreCase(dto.getName())) {
+            throw new AlreadyExistsException("Category with name '%s' already exists".formatted(dto.getName()));
         }
-        return categoryRepository.save(category);
+
+        Category category = categoryMapper.addCategoryDtoToCategory(dto);
+        category = categoryRepository.save(category);
+        return categoryMapper.categoryToCategoryDto(category);
     }
 
     @Override
-    public Category updateCategory(Category updatedCategory) {
-        return categoryRepository.save(updatedCategory);
+    public CategoryDto updateCategory(Long id, UpdateCategoryDto dto) {
+        Category category = getCategoryById(id);
+        categoryMapper.updateCategory(category, dto);
+        category = categoryRepository.save(category);
+        return categoryMapper.categoryToCategoryDto(category);
     }
 
     @Override
     public void deleteCategory(Long id) {
-        Category category = getCategory(id);
+        Category category = getCategoryById(id);
         categoryRepository.delete(category);
     }
 
-    @Override
-    public boolean allCategoriesExist(List<Long> ids) {
-        List<Category> categories = categoryRepository.findAllByIds(ids);
-        return categories.size() == ids.size();
+    private Category getCategoryById(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Category"));
     }
 }

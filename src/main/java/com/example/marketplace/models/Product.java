@@ -23,7 +23,7 @@ public class Product {
     private double price;
     private int quantity;
 
-    @OneToMany
+    @ManyToMany(cascade = {CascadeType.REFRESH})
     // I use Set to ensure category is unique
     private Set<Category> categories = new HashSet<>();
 
