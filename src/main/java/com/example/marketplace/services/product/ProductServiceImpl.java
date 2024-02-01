@@ -59,7 +59,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> searchProducts(ProductFilterDto filterDto, Pageable pageable) {
-        return null;
+        List<Product> products = productRepository.searchProducts(filterDto, pageable).getContent();
+        return products.stream().map(productMapper::productToProductDto).toList();
     }
 
     private Product getProductById(Long id) {

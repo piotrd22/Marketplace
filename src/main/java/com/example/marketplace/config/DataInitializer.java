@@ -26,7 +26,7 @@ public class DataInitializer {
         return args -> {
             for (String categoryName : categoryNames) {
                 CategoryDto categoryDto = categoryService.addCategory(new AddCategoryDto(categoryName, "Desc"));
-                productService.addProduct(new AddProductDto("Product to '%s'".formatted(categoryName), "Desc1", 10.0, 5, Set.of(categoryDto.getId())));
+                productService.addProduct(new AddProductDto("Product to '%s'".formatted(categoryName), "Desc %s".formatted(categoryName), 10.0, 5, Set.of(categoryDto.getId())));
             }
         };
     }

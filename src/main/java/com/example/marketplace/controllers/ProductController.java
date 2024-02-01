@@ -1,6 +1,7 @@
 package com.example.marketplace.controllers;
 
 import com.example.marketplace.dtos.request.AddProductDto;
+import com.example.marketplace.dtos.request.ProductFilterDto;
 import com.example.marketplace.dtos.request.UpdateProductDto;
 import com.example.marketplace.dtos.response.ProductDto;
 import com.example.marketplace.services.product.ProductService;
@@ -57,5 +58,12 @@ public class ProductController extends AbstractControllerBase {
         logger.info("Inside: ProductController -> updateProduct()...");
         ProductDto product = productService.updateProduct(id, dto);
         return ResponseEntity.ok().body(product);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<ProductDto>> searchProducts(@RequestBody @Valid ProductFilterDto filterDto, Pageable pageable) {
+        logger.info("Inside: ProductController -> searchProducts()...");
+        List<ProductDto> products = productService.searchProducts(filterDto, pageable);
+        return ResponseEntity.ok().body(products);
     }
 }
