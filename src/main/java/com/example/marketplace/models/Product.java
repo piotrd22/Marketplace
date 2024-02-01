@@ -20,8 +20,8 @@ public class Product {
 
     private String name;
     private String description;
-    private double price;
-    private int quantity;
+    private Double price;
+    private Integer quantity;
 
     @ManyToMany(cascade = {CascadeType.REFRESH})
     // I use Set to ensure category is unique

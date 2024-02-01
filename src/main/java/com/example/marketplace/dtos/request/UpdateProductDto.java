@@ -17,12 +17,12 @@ public class UpdateProductDto {
     @Size(max = 500)
     private String description;
 
-    @PositiveOrZero
-    private double price;
+    @Positive
+    private Double price;
 
-    @Min(1)
-    private int quantity;
+    @Positive
+    private Integer quantity;
 
-    @NotEmpty
+    @Size(min = 1)
     private Set<Long> categoryIds;
 }

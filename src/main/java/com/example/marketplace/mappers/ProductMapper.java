@@ -30,15 +30,15 @@ public abstract class ProductMapper {
     @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "categoryIdToCategory")
     public abstract Product updateProductDtoToProduct(UpdateProductDto updateProductDto);
 
+    @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "categoryIdToCategory")
+    public void updateProduct(Product product, UpdateProductDto dto) {
+        updater.update(product, updateProductDtoToProduct(dto));
+    }
+
     @Named("categoryIdToCategory")
     public Category categoryIdToCategory(Long id) {
         CategoryDto categoryDto = categoryService.getCategory(id);
         return categoryMapper.categoryDtoToCategory(categoryDto);
-    }
-
-    @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "categoryIdToCategory")
-    public void updateProduct(Product product, UpdateProductDto dto) {
-        updater.update(product, updateProductDtoToProduct(dto));
     }
 
     @Mapper(

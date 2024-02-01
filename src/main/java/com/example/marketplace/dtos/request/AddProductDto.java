@@ -17,13 +17,11 @@ public class AddProductDto {
     @Size(max = 500)
     private String description;
 
-    @NotNull
     @PositiveOrZero
-    private double price;
+    private Double price;
 
-    @NotNull
     @Min(1)
-    private int quantity;
+    private Integer quantity;
 
     @NotEmpty
     private Set<Long> categoryIds;
