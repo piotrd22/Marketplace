@@ -4,10 +4,12 @@ import com.example.marketplace.dtos.request.AddCategoryDto;
 import com.example.marketplace.dtos.request.UpdateCategoryDto;
 import com.example.marketplace.dtos.response.CategoryDto;
 import com.example.marketplace.exceptions.AlreadyExistsException;
+import com.example.marketplace.exceptions.EntityInUseException;
 import com.example.marketplace.exceptions.NotFoundException;
 import com.example.marketplace.mappers.CategoryMapper;
 import com.example.marketplace.models.Category;
 import com.example.marketplace.repositories.CategoryRepository;
+import com.example.marketplace.services.product.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,6 +58,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long id) {
+        if (categoryRepository.existsProductInCategory(id)) {
+            throw new EntityInUseException("Category with id '%s' is in use by products".formatted(id));
+        }
+
         Category category = getCategoryById(id);
         categoryRepository.delete(category);
     }

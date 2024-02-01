@@ -1,6 +1,7 @@
 package com.example.marketplace.config;
 
 import com.example.marketplace.exceptions.AlreadyExistsException;
+import com.example.marketplace.exceptions.EntityInUseException;
 import com.example.marketplace.exceptions.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AlreadyExistsException.class)
     protected ResponseEntity<Object> handleAlreadyExistsException(AlreadyExistsException ex, WebRequest request) {
+        CustomError error = new CustomError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage(), LocalDateTime.now());
+        return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(EntityInUseException.class)
+    protected ResponseEntity<Object> handleEntityInUseException(EntityInUseException ex, WebRequest request) {
         CustomError error = new CustomError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage(), LocalDateTime.now());
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
