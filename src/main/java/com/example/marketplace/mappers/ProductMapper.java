@@ -17,9 +17,6 @@ public abstract class ProductMapper {
     private CategoryService categoryService;
 
     @Autowired
-    private CategoryMapper categoryMapper;
-
-    @Autowired
     private Updater updater;
 
     public abstract ProductDto productToProductDto(Product product);
@@ -37,8 +34,7 @@ public abstract class ProductMapper {
 
     @Named("categoryIdToCategory")
     public Category categoryIdToCategory(Long id) {
-        CategoryDto categoryDto = categoryService.getCategory(id);
-        return categoryMapper.categoryDtoToCategory(categoryDto);
+        return categoryService.getCategory(id);
     }
 
     @Mapper(

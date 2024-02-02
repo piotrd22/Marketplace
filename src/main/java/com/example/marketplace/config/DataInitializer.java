@@ -3,6 +3,8 @@ package com.example.marketplace.config;
 import com.example.marketplace.dtos.request.AddCategoryDto;
 import com.example.marketplace.dtos.request.AddProductDto;
 import com.example.marketplace.dtos.response.CategoryDto;
+import com.example.marketplace.models.Category;
+import com.example.marketplace.models.Product;
 import com.example.marketplace.services.category.CategoryService;
 import com.example.marketplace.services.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,18 @@ public class DataInitializer {
             ) {
         return args -> {
             for (String categoryName : categoryNames) {
-                CategoryDto categoryDto = categoryService.addCategory(new AddCategoryDto(categoryName, "Desc"));
-                productService.addProduct(new AddProductDto("Product to '%s'".formatted(categoryName), "Desc %s".formatted(categoryName), 10.0, 5, Set.of(categoryDto.getId())));
+                Category category = new Category();
+                category.setName(categoryName);
+                category.setDescription("Desc");
+                category = categoryService.addCategory(category);
+
+                Product product = new Product();
+                product.setName("Product to '%s'".formatted(categoryName));
+                product.setDescription("Desc %s".formatted(categoryName));
+                product.setPrice(10.0);
+                product.setQuantity(5);
+                product.setCategories(Set.of(category));
+                productService.addProduct(product);
             }
         };
     }

@@ -4,6 +4,8 @@ import com.example.marketplace.dtos.request.AddProductDto;
 import com.example.marketplace.dtos.request.ProductFilterDto;
 import com.example.marketplace.dtos.request.UpdateProductDto;
 import com.example.marketplace.dtos.response.ProductDto;
+import com.example.marketplace.mappers.ProductMapper;
+import com.example.marketplace.models.Product;
 import com.example.marketplace.services.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -19,31 +21,35 @@ import java.util.List;
 public class ProductController extends AbstractControllerBase {
 
     private final ProductService productService;
+    private final ProductMapper productMapper;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ProductMapper productMapper) {
         this.productService = productService;
+        this.productMapper = productMapper;
     }
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> getProducts(Pageable pageable) {
         logger.info("Inside: ProductController -> getProducts()...");
-        List<ProductDto> products = productService.getProducts(pageable);
-        return ResponseEntity.ok().body(products);
+        List<Product> products = productService.getProducts(pageable);
+        List<ProductDto> productDtos = products.stream().map(productMapper::productToProductDto).toList();
+        return ResponseEntity.ok().body(productDtos);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
         logger.info("Inside: ProductController -> getProduct()...");
-        ProductDto product = productService.getProduct(id);
-        return ResponseEntity.ok().body(product);
+        Product product = productService.getProduct(id);
+        return ResponseEntity.ok().body(productMapper.productToProductDto(product));
     }
 
     @PostMapping
     public ResponseEntity<ProductDto> addProduct(@RequestBody @Valid AddProductDto dto, HttpServletRequest request){
         logger.info("Inside: ProductController -> addProduct()...");
-        ProductDto product = productService.addProduct(dto);
+        Product product = productMapper.addProductDtoToProduct(dto);
+        product = productService.addProduct(product);
         URI location = getURILocationFromRequest(product.getId(), request);
-        return ResponseEntity.created(location).body(product);
+        return ResponseEntity.created(location).body(productMapper.productToProductDto(product));
     }
 
     @DeleteMapping("/{id}")
@@ -56,14 +62,17 @@ public class ProductController extends AbstractControllerBase {
     @PutMapping("/{id}")
     public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody @Valid UpdateProductDto dto) {
         logger.info("Inside: ProductController -> updateProduct()...");
-        ProductDto product = productService.updateProduct(id, dto);
-        return ResponseEntity.ok().body(product);
+        Product product = productService.getProduct(id);
+        productMapper.updateProduct(product, dto);
+        product = productService.updateProduct(product);
+        return ResponseEntity.ok().body(productMapper.productToProductDto(product));
     }
 
     @PostMapping("/search")
     public ResponseEntity<List<ProductDto>> searchProducts(@RequestBody @Valid ProductFilterDto filterDto, Pageable pageable) {
         logger.info("Inside: ProductController -> searchProducts()...");
-        List<ProductDto> products = productService.searchProducts(filterDto, pageable);
-        return ResponseEntity.ok().body(products);
+        List<Product> products = productService.searchProducts(filterDto, pageable);
+        List<ProductDto> productDtos = products.stream().map(productMapper::productToProductDto).toList();
+        return ResponseEntity.ok().body(productDtos);
     }
 }

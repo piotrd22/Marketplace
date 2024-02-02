@@ -1,37 +1,28 @@
 package com.example.marketplace.models;
 
+import com.example.marketplace.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Product {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    @OneToMany
+    private List<OrderProduct> orderProducts;
 
-    private String description;
-
-    @Column(nullable = false)
-    private Double price;
-
-    @Column(nullable = false)
-    private Integer quantity;
-
-    @ManyToMany(cascade = {CascadeType.REFRESH})
-    // I use Set to ensure category is unique
-    private Set<Category> categories = new HashSet<>();
+    @Enumerated(EnumType.ORDINAL)
+    private OrderStatus orderStatus;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

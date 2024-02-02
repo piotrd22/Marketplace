@@ -17,53 +17,38 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductMapper productMapper;
-
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.productMapper = productMapper;
     }
 
     @Override
-    public ProductDto getProduct(Long id) {
-        Product product = getProductById(id);
-        return productMapper.productToProductDto(product);
+    public Product getProduct(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Product"));
     }
 
     @Override
-    public List<ProductDto> getProducts(Pageable pageable) {
-        List<Product> products = productRepository.findAll(pageable).getContent();
-        return products.stream().map(productMapper::productToProductDto).toList();
+    public List<Product> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable).getContent();
     }
 
     @Override
-    public ProductDto addProduct(AddProductDto dto) {
-        Product product = productMapper.addProductDtoToProduct(dto);
-        product = productRepository.save(product);
-        return productMapper.productToProductDto(product);
+    public Product addProduct(Product product) {
+        return productRepository.save(product);
     }
 
     @Override
-    public ProductDto updateProduct(Long id, UpdateProductDto dto) {
-        Product product = getProductById(id);
-       productMapper.updateProduct(product, dto);
-       product = productRepository.save(product);
-       return productMapper.productToProductDto(product);
+    public Product updateProduct(Product product) {
+       return productRepository.save(product);
     }
 
     @Override
     public void deleteProduct(Long id) {
-        Product product = getProductById(id);
+        Product product = getProduct(id);
         productRepository.delete(product);
     }
 
     @Override
-    public List<ProductDto> searchProducts(ProductFilterDto filterDto, Pageable pageable) {
-        List<Product> products = productRepository.searchProducts(filterDto, pageable).getContent();
-        return products.stream().map(productMapper::productToProductDto).toList();
-    }
-
-    private Product getProductById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Product"));
+    public List<Product> searchProducts(ProductFilterDto filterDto, Pageable pageable) {
+        return productRepository.searchProducts(filterDto, pageable).getContent();
     }
 }

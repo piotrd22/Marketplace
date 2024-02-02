@@ -1,16 +1,13 @@
 package com.example.marketplace.services.category;
 
-import com.example.marketplace.dtos.request.AddCategoryDto;
-import com.example.marketplace.dtos.request.UpdateCategoryDto;
-import com.example.marketplace.dtos.response.CategoryDto;
+import com.example.marketplace.models.Category;
 
 import java.util.List;
-import java.util.Set;
 
 public interface CategoryService {
-    List<CategoryDto> getAllCategories();
-    CategoryDto getCategory(Long id);
-    CategoryDto addCategory(AddCategoryDto category);
-    CategoryDto updateCategory(Long id, UpdateCategoryDto updatedCategory);
+    List<Category> getAllCategories();
+    Category getCategory(Long id);
+    Category addCategory(Category category);
+    Category updateCategory(Category category);
     void deleteCategory(Long id);
 }

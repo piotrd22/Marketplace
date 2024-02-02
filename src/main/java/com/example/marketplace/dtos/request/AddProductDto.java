@@ -17,10 +17,10 @@ public class AddProductDto {
     @Size(max = 500)
     private String description;
 
-    @PositiveOrZero
+    @Min(0)
     private Double price;
 
-    @Min(1)
+    @Min(0)
     private Integer quantity;
 
     @NotEmpty

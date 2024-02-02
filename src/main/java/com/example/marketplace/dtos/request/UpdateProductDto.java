@@ -17,10 +17,10 @@ public class UpdateProductDto {
     @Size(max = 500)
     private String description;
 
-    @Positive
+    @Min(0)
     private Double price;
 
-    @Positive
+    @Min(0)
     private Integer quantity;
 
     @Size(min = 1)

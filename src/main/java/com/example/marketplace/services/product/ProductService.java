@@ -1,18 +1,16 @@
 package com.example.marketplace.services.product;
 
-import com.example.marketplace.dtos.request.AddProductDto;
 import com.example.marketplace.dtos.request.ProductFilterDto;
-import com.example.marketplace.dtos.request.UpdateProductDto;
-import com.example.marketplace.dtos.response.ProductDto;
+import com.example.marketplace.models.Product;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ProductService {
-    ProductDto getProduct(Long id);
-    List<ProductDto> getProducts(Pageable pageable);
-    ProductDto addProduct(AddProductDto addProductDto);
-    ProductDto updateProduct(Long id, UpdateProductDto updateProductDto);
+    Product getProduct(Long id);
+    List<Product> getProducts(Pageable pageable);
+    Product addProduct(Product product);
+    Product updateProduct(Product product);
     void deleteProduct(Long id);
-    List<ProductDto> searchProducts(ProductFilterDto filterDto, Pageable pageable);
+    List<Product> searchProducts(ProductFilterDto filterDto, Pageable pageable);
 }
