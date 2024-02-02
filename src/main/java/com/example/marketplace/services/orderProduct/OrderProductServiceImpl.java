@@ -94,8 +94,22 @@ public class OrderProductServiceImpl implements OrderProductService {
     }
 
     @Override
-    public void removeProductFromCart(Long id) {
+    @Transactional
+    // TODO Think about whether when you remove the last product from the cart, you should also remove it
+    public Order removeProductFromCart(Long id) {
+        Optional<Order> cartOrder = orderService.getOrderByOrderStatus(OrderStatus.CART);
+
+        if (cartOrder.isEmpty()) {
+            throw new NotFoundException("Cart not found");
+        }
+
         OrderProduct orderProduct = getOrderProduct(id);
+
+        Order order = cartOrder.get();
+        order.getOrderProducts().remove(orderProduct);
         orderProductRepository.delete(orderProduct);
+
+        order = orderService.saveOrder(order);
+        return order;
     }
 }

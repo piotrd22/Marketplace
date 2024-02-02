@@ -14,9 +14,10 @@ import java.util.List;
 public class OrderDto {
     private Long id;
     private List<OrderProductDto> orderProducts;
-    private PaymentDto payment;
+    private OrderPaymentDto orderPayment;
     private OrderAddressDto orderAddress;
     private OrderStatus orderStatus;
+    private Double price;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

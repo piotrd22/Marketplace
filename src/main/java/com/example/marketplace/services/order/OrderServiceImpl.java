@@ -1,11 +1,14 @@
 package com.example.marketplace.services.order;
 
 import com.example.marketplace.enums.OrderStatus;
+import com.example.marketplace.exceptions.NotFoundException;
 import com.example.marketplace.models.Order;
+import com.example.marketplace.models.OrderAddress;
+import com.example.marketplace.models.OrderPayment;
 import com.example.marketplace.repositories.OrderRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +23,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order getOrder(Long id) {
-        return null;
+        return orderRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Order"));
     }
 
     @Override
     public List<Order> getOrders(Pageable pageable) {
-        return null;
+        return orderRepository.findAll(pageable).getContent();
     }
 
     @Override
@@ -39,7 +42,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void deleteCartOrder(Long id) {
+    public Order addAddressToOrder(Long id, OrderAddress orderAddress) {
+        return null;
+    }
 
+    @Override
+    public Order addPaymentToOrder(Long id, OrderPayment orderPayment) {
+        return null;
+    }
+
+    @Override
+    public Order payForOrder(Long id) {
+        return null;
+    }
+
+    @Override
+    public Order sendOrder(Long id) {
+        return null;
+    }
+
+    @Override
+    public Order deliverOrder(Long id) {
+        return null;
     }
 }

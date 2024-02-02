@@ -9,10 +9,7 @@ import com.example.marketplace.models.OrderProduct;
 import com.example.marketplace.services.orderProduct.OrderProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/order-product")
@@ -33,6 +30,13 @@ public class OrderProductController extends AbstractControllerBase {
         logger.info("Inside: OrderProductController -> addProductToCart()...");
         OrderProduct orderProduct = orderProductMapper.addProductToCartDtoToOrderProduct(dto);
         Order order = orderProductService.addProductToCart(orderProduct);
+        return ResponseEntity.ok().body(orderMapper.orderToOrderDto(order));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<OrderDto> removeProductFromCart(@PathVariable Long id) {
+        logger.info("Inside: OrderProductController -> addProductFromCart()...");
+        Order order = orderProductService.removeProductFromCart(id);
         return ResponseEntity.ok().body(orderMapper.orderToOrderDto(order));
     }
 }

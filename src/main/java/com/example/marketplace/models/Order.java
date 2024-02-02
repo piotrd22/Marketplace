@@ -23,7 +23,7 @@ public class Order {
     private List<OrderProduct> orderProducts;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private Payment payment;
+    private OrderPayment orderPayment;
 
     @OneToOne(cascade = CascadeType.ALL)
     private OrderAddress orderAddress;
