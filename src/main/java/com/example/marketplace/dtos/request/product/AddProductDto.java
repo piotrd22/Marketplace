@@ -1,4 +1,4 @@
-package com.example.marketplace.dtos.request;
+package com.example.marketplace.dtos.request.product;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,8 +1,7 @@
 package com.example.marketplace.mappers;
 
-import com.example.marketplace.dtos.request.AddProductDto;
-import com.example.marketplace.dtos.request.UpdateProductDto;
-import com.example.marketplace.dtos.response.CategoryDto;
+import com.example.marketplace.dtos.request.product.AddProductDto;
+import com.example.marketplace.dtos.request.product.UpdateProductDto;
 import com.example.marketplace.dtos.response.ProductDto;
 import com.example.marketplace.models.Category;
 import com.example.marketplace.models.Product;

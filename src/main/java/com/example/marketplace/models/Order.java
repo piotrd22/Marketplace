@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +21,12 @@ public class Order {
 
     @OneToMany
     private List<OrderProduct> orderProducts;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Payment payment;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private OrderAddress orderAddress;
 
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;

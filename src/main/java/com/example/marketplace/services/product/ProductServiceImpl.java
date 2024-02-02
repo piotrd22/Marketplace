@@ -1,11 +1,7 @@
 package com.example.marketplace.services.product;
 
-import com.example.marketplace.dtos.request.AddProductDto;
-import com.example.marketplace.dtos.request.ProductFilterDto;
-import com.example.marketplace.dtos.request.UpdateProductDto;
-import com.example.marketplace.dtos.response.ProductDto;
+import com.example.marketplace.dtos.request.product.ProductFilterDto;
 import com.example.marketplace.exceptions.NotFoundException;
-import com.example.marketplace.mappers.ProductMapper;
 import com.example.marketplace.models.Product;
 import com.example.marketplace.repositories.ProductRepository;
 import org.springframework.data.domain.Pageable;

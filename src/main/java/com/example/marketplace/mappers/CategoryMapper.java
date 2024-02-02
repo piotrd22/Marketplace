@@ -1,7 +1,7 @@
 package com.example.marketplace.mappers;
 
-import com.example.marketplace.dtos.request.AddCategoryDto;
-import com.example.marketplace.dtos.request.UpdateCategoryDto;
+import com.example.marketplace.dtos.request.category.AddCategoryDto;
+import com.example.marketplace.dtos.request.category.UpdateCategoryDto;
 import com.example.marketplace.dtos.response.CategoryDto;
 import com.example.marketplace.models.Category;
 import org.mapstruct.*;

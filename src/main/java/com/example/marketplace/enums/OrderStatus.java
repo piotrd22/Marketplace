@@ -2,12 +2,11 @@ package com.example.marketplace.enums;
 
 public enum OrderStatus {
     CART(1),
-    PENDING(2),
-    PAID(3),
-    SHIPPED(4),
-    DELIVERED(5);
+    PAID(2),
+    SHIPPED(3),
+    DELIVERED(4);
 
-    // We could also add canceled, but I'll leave it like that for now
+    // We could also add canceled, pending, etc., but I'll leave it like that for now
     private final int value;
 
     OrderStatus(int value) {

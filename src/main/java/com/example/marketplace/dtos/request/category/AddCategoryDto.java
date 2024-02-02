@@ -1,4 +1,4 @@
-package com.example.marketplace.dtos.request;
+package com.example.marketplace.dtos.request.category;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,6 +1,6 @@
 package com.example.marketplace.repositories;
 
-import com.example.marketplace.dtos.request.ProductFilterDto;
+import com.example.marketplace.dtos.request.product.ProductFilterDto;
 import com.example.marketplace.models.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
