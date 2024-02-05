@@ -33,6 +33,8 @@ public class Product {
     // I use Set to ensure category is unique
     private Set<Category> categories = new HashSet<>();
 
+    private boolean isDeleted;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

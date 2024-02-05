@@ -18,9 +18,6 @@ public class UpdateProductDto {
     private String description;
 
     @Min(0)
-    private Double price;
-
-    @Min(0)
     private Integer quantity;
 
     @Size(min = 1)

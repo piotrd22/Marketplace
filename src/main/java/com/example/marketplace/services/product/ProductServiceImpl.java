@@ -4,6 +4,7 @@ import com.example.marketplace.dtos.request.product.ProductFilterDto;
 import com.example.marketplace.exceptions.NotFoundException;
 import com.example.marketplace.models.Product;
 import com.example.marketplace.repositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+
     public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
@@ -34,13 +36,25 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(Product product) {
-       return productRepository.save(product);
+        return productRepository.save(product);
     }
 
     @Override
+    @Transactional
+    // When updating a product price, I create a new one to save the history of orders
+    public Product updateKeyProductValues(Long oldProductId, Product newProduct) {
+        deleteProduct(oldProductId);
+        return addProduct(newProduct);
+    }
+
+
+    @Override
+    @Transactional
     public void deleteProduct(Long id) {
         Product product = getProduct(id);
-        productRepository.delete(product);
+        product.setQuantity(0);
+        product.setDeleted(true);
+        productRepository.save(product);
     }
 
     @Override

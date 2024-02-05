@@ -2,6 +2,7 @@ package com.example.marketplace.controllers;
 
 import com.example.marketplace.dtos.request.product.AddProductDto;
 import com.example.marketplace.dtos.request.product.ProductFilterDto;
+import com.example.marketplace.dtos.request.product.UpdateKeyProductValuesDto;
 import com.example.marketplace.dtos.request.product.UpdateProductDto;
 import com.example.marketplace.dtos.response.ProductDto;
 import com.example.marketplace.mappers.ProductMapper;
@@ -67,6 +68,18 @@ public class ProductController extends AbstractControllerBase {
         product = productService.updateProduct(product);
         return ResponseEntity.ok().body(productMapper.productToProductDto(product));
     }
+
+    @PutMapping("/{id}/key")
+    // With this method, we update very important data, such as price, to preserve the history of such important things in old orders.
+    public ResponseEntity<ProductDto> updateKeyProductValues(@PathVariable Long id, @RequestBody @Valid UpdateKeyProductValuesDto dto) {
+        logger.info("Inside: ProductController -> updateKeyProductValues()...");
+        Product product = productService.getProduct(id);
+        Product newProduct = productMapper.mapProduct(product);
+        productMapper.updateProductKeyValues(newProduct, dto);
+        product = productService.updateKeyProductValues(product.getId(), newProduct);
+        return ResponseEntity.ok().body(productMapper.productToProductDto(product));
+    }
+
 
     @PostMapping("/search")
     public ResponseEntity<List<ProductDto>> searchProducts(@RequestBody @Valid ProductFilterDto filterDto, Pageable pageable) {

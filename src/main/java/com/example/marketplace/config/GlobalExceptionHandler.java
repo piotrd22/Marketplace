@@ -1,9 +1,6 @@
 package com.example.marketplace.config;
 
-import com.example.marketplace.exceptions.AlreadyExistsException;
-import com.example.marketplace.exceptions.EntityInUseException;
-import com.example.marketplace.exceptions.InsufficientQuantityException;
-import com.example.marketplace.exceptions.NotFoundException;
+import com.example.marketplace.exceptions.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -9,6 +9,7 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring", uses = {ProductMapper.class})
 public abstract class CartProductMapper {
+
     @Mapping(source = "productId", target = "product", qualifiedByName = "productIdToProduct")
     public abstract CartProduct addProductToCartDtoToCartProduct(AddProductToCartDto dto);
 

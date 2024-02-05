@@ -11,6 +11,7 @@ public interface ProductService {
     List<Product> getProducts(Pageable pageable);
     Product addProduct(Product product);
     Product updateProduct(Product product);
+    Product updateKeyProductValues(Long oldProductId, Product newProduct);
     void deleteProduct(Long id);
     List<Product> searchProducts(ProductFilterDto filterDto, Pageable pageable);
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+// I assume that the user (mocked, of course) has one Cart and cannot share it.
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +28,7 @@ public class Cart {
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
+    @Column(nullable = false)
     // MockOnly
     private Long userId;
 

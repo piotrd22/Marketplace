@@ -19,7 +19,7 @@ public abstract class AbstractControllerBase {
                 .toUri();
     }
 
-    // Mock
+    // Mock -- Normally I would take the user out of security context
     protected Long getUserId() {
         return 1L;
     }

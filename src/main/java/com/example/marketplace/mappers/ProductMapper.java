@@ -1,6 +1,7 @@
 package com.example.marketplace.mappers;
 
 import com.example.marketplace.dtos.request.product.AddProductDto;
+import com.example.marketplace.dtos.request.product.UpdateKeyProductValuesDto;
 import com.example.marketplace.dtos.request.product.UpdateProductDto;
 import com.example.marketplace.dtos.response.ProductDto;
 import com.example.marketplace.models.Category;
@@ -20,11 +21,20 @@ public abstract class ProductMapper {
 
     public abstract ProductDto productToProductDto(Product product);
 
+    @Mapping(target = "id", ignore = true)
+    public abstract Product mapProduct(Product product);
+
     @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "categoryIdToCategory")
     public abstract Product addProductDtoToProduct(AddProductDto addProductDto);
 
     @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "categoryIdToCategory")
     public abstract Product updateProductDtoToProduct(UpdateProductDto updateProductDto);
+
+    public abstract Product updateKeyProductValuesDtoToProduct(UpdateKeyProductValuesDto updateKeyProductValuesDto);
+
+    public void updateProductKeyValues(Product product, UpdateKeyProductValuesDto dto) {
+        updater.update(product, updateKeyProductValuesDtoToProduct(dto));
+    }
 
     @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "categoryIdToCategory")
     public void updateProduct(Product product, UpdateProductDto dto) {

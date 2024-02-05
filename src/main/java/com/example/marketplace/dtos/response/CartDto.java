@@ -16,6 +16,7 @@ public class CartDto {
     private PaymentDto payment;
     private AddressDto address;
     private Double price;
+    private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

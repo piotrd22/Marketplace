@@ -18,6 +18,7 @@ public class OrderDto {
     private AddressDto address;
     private OrderStatus orderStatus;
     private Double price;
+    private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

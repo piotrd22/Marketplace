@@ -1,10 +1,13 @@
 package com.example.marketplace.services.cart;
 
+import com.example.marketplace.exceptions.AlreadyExistsException;
 import com.example.marketplace.exceptions.InsufficientQuantityException;
 import com.example.marketplace.exceptions.NotFoundException;
 import com.example.marketplace.models.*;
+import com.example.marketplace.repositories.AddressRepository;
 import com.example.marketplace.repositories.CartProductRepository;
 import com.example.marketplace.repositories.CartRepository;
+import com.example.marketplace.repositories.PaymentRepository;
 import com.example.marketplace.services.product.ProductService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -18,12 +21,21 @@ public class CartServiceImpl implements CartService {
 
     private final CartProductRepository cartProductRepository;
     private final CartRepository cartRepository;
+    private final PaymentRepository paymentRepository;
+    private final AddressRepository addressRepository;
     private final ProductService productService;
 
-    public CartServiceImpl(CartProductRepository cartProductRepository, CartRepository cartRepository, ProductService productService) {
+    public CartServiceImpl(CartProductRepository cartProductRepository, CartRepository cartRepository, PaymentRepository paymentRepository, AddressRepository addressRepository, ProductService productService) {
         this.cartProductRepository = cartProductRepository;
         this.cartRepository = cartRepository;
+        this.paymentRepository = paymentRepository;
+        this.addressRepository = addressRepository;
         this.productService = productService;
+    }
+
+    @Override
+    public Cart getCartByUserId(Long userId) {
+        return cartRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("Cart with user id '%s' not found".formatted(userId)));
     }
 
     @Override
@@ -89,20 +101,94 @@ public class CartServiceImpl implements CartService {
     @Transactional
     // TODO Think about whether when you remove the last product from the cart, you should also remove it
     public Cart removeProductFromCart(Long id, Long userId) {
-        Optional<Cart> oldCart = cartRepository.findByUserId(userId);
-
-        if (oldCart.isEmpty()) {
-            throw new NotFoundException("Cart not found");
-        }
-
+        Cart cart = getCartByUserId(userId);
         CartProduct cartProduct = getCartProduct(id);
-
-        Cart cart = oldCart.get();
         cart.getCartProducts().remove(cartProduct);
         cartProductRepository.delete(cartProduct);
-
         cart = cartRepository.save(cart);
         return cart;
+    }
+
+    @Override
+    public Cart updateProductQuantityInCart(Long userId, Long cartProductId, int newQuantity) {
+        Cart cart = getCartByUserId(userId);
+        CartProduct cartProduct = getCartProduct(cartProductId);
+        Product product = productService.getProduct(cartProduct.getProduct().getId());
+
+        if (!cart.getCartProducts().contains(cartProduct)) {
+            throw new NotFoundException("The cart product with id '%s' was not found in the cart with id '%s'".formatted(cartProductId, cart.getId()));
+        }
+
+        if (newQuantity > product.getQuantity()) {
+            throw new InsufficientQuantityException();
+        }
+
+        cart.getCartProducts().remove(cartProduct);
+        cartProduct.setQuantity(newQuantity);
+        cart.getCartProducts().add(cartProduct);
+        cartProductRepository.save(cartProduct);
+
+        return cart;
+    }
+
+    @Override
+    @Transactional
+    public Cart addAddressToCart(Long userId, Address address) {
+        Cart cart = getCartByUserId(userId);
+
+        if (cart.getAddress() != null) {
+            throw new AlreadyExistsException("Cart with user id '%s' already have address.".formatted(userId));
+        }
+
+        address.setUserId(userId);
+        address = addressRepository.save(address);
+        cart.setAddress(address);
+        return cartRepository.save(cart);
+    }
+
+    @Override
+    @Transactional
+    public Cart addPaymentToCart(Long userId, Payment payment) {
+        Cart cart = getCartByUserId(userId);
+
+        if (cart.getPayment() != null) {
+            throw new AlreadyExistsException("Cart with user id '%s' already have payment method.".formatted(userId));
+        }
+
+        payment.setUserId(userId);
+        payment = paymentRepository.save(payment);
+        cart.setPayment(payment);
+        return cartRepository.save(cart);
+    }
+
+    @Override
+    public Cart updateAddressInCart(Long userId, Address address) {
+        return null;
+    }
+
+    @Override
+    public Cart updatePaymentInCart(Long userId, Payment payment) {
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public void deleteCart(Long userId) {
+        Cart cart = getCartByUserId(userId);
+
+        for (CartProduct cartProduct : cart.getCartProducts()) {
+            cartProductRepository.delete(cartProduct);
+        }
+
+        if (cart.getAddress() != null) {
+            addressRepository.delete(cart.getAddress());
+        }
+
+        if (cart.getPayment() != null) {
+            paymentRepository.delete(cart.getPayment());
+        }
+
+        cartRepository.delete(cart);
     }
 
     private CartProduct getCartProduct(Long id) {

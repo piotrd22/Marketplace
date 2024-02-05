@@ -12,5 +12,6 @@ import java.time.LocalDateTime;
 public class AddressDto {
     private Long id;
     private String addressInfo;
+    private Long userId;
     private LocalDateTime createdAt;
 }

@@ -18,6 +18,10 @@ public class Address {
 
     private String addressInfo;
 
+    @Column(nullable = false)
+    // MockOnly
+    private Long userId;
+
     private LocalDateTime createdAt;
 
     @PrePersist
