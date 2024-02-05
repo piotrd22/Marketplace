@@ -13,23 +13,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "orders")
-public class Order {
+public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany
-    private List<OrderProduct> orderProducts;
+    private List<CartProduct> cartProducts;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Payment payment;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
-
-    @Enumerated(EnumType.ORDINAL)
-    private OrderStatus orderStatus;
 
     // MockOnly
     private Long userId;

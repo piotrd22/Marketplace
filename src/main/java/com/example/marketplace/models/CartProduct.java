@@ -1,38 +1,26 @@
 package com.example.marketplace.models;
 
-import com.example.marketplace.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "orders")
-public class Order {
+public class CartProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
-    private List<OrderProduct> orderProducts;
+    @ManyToOne
+    private Product product;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Payment payment;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Address address;
-
-    @Enumerated(EnumType.ORDINAL)
-    private OrderStatus orderStatus;
-
-    // MockOnly
-    private Long userId;
+    @Column(nullable = false)
+    private Integer quantity;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -5,12 +5,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderAddressDto {
+public class CartDto {
     private Long id;
-    private String addressInfo;
+    private List<CartProductDto> cartProducts;
+    private PaymentDto payment;
+    private AddressDto address;
+    private Double price;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

@@ -1,7 +1,7 @@
 package com.example.marketplace.enums;
 
 public enum OrderStatus {
-    CART(1),
+    PENDING(1),
     PAID(2),
     SHIPPED(3),
     DELIVERED(4);

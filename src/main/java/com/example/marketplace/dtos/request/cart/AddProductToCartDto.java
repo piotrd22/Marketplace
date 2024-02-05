@@ -1,4 +1,4 @@
-package com.example.marketplace.dtos.request.orderProduct;
+package com.example.marketplace.dtos.request.cart;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;

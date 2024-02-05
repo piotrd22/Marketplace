@@ -18,4 +18,9 @@ public abstract class AbstractControllerBase {
                 .buildAndExpand(id)
                 .toUri();
     }
+
+    // Mock
+    protected Long getUserId() {
+        return 1L;
+    }
 }

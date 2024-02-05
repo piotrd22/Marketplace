@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderPaymentDto {
+public class PaymentDto {
     private Long id;
     private PaymentMethod paymentMethod;
     private LocalDateTime paymentDate;

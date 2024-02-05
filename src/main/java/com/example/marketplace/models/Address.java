@@ -1,6 +1,5 @@
 package com.example.marketplace.models;
 
-import com.example.marketplace.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,16 +11,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class OrderPayment {
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "payment")
-    private Order order;
+    private String addressInfo;
 
-    @Enumerated(EnumType.ORDINAL)
-    private PaymentMethod paymentMethod;
+    private LocalDateTime createdAt;
 
-    private LocalDateTime paymentDate;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 }
