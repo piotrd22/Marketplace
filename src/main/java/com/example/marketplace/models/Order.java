@@ -31,6 +31,8 @@ public class Order {
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus orderStatus;
 
+    private Double orderPrice;
+
     @Column(nullable = false)
     // MockOnly
     private Long userId;

@@ -15,7 +15,7 @@ public class CartDto {
     private List<CartProductDto> cartProducts;
     private PaymentDto payment;
     private AddressDto address;
-    private Double price;
+    private Double cartPrice;
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

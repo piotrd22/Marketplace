@@ -22,6 +22,9 @@ public class OrderProduct {
     @Column(nullable = false)
     private Integer quantity;
 
+    @Column(nullable = false)
+    private Double productPrice;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

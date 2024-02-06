@@ -22,4 +22,7 @@ public class UpdateProductDto {
 
     @Size(min = 1)
     private Set<Long> categoryIds;
+
+    @Min(0)
+    private Double price;
 }

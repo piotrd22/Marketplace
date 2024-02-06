@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+// We could also add, I don't know, a discount, etc., but I'll leave it at that
 public class CartProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +22,9 @@ public class CartProduct {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Column(nullable = false)
+    private Double productPrice;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -13,6 +13,7 @@ public class OrderProductDto {
     private Long id;
     private ProductDto product;
     private Integer quantity;
+    private Double productPrice;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

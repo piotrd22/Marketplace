@@ -41,15 +41,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    // When updating a product price, I create a new one to save the history of orders
-    public Product updateKeyProductValues(Long oldProductId, Product newProduct) {
-        deleteProduct(oldProductId);
-        return addProduct(newProduct);
-    }
-
-
-    @Override
-    @Transactional
     public void deleteProduct(Long id) {
         Product product = getProduct(id);
         product.setQuantity(0);

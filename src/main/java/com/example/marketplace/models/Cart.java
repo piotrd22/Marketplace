@@ -28,6 +28,8 @@ public class Cart {
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
 
+    private Double cartPrice;
+
     @Column(nullable = false)
     // MockOnly
     private Long userId;

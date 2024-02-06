@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -59,9 +60,13 @@ public class CartServiceImpl implements CartService {
 
                 // If so, I check whether we have enough Product in stock
                 // If so, I save the entities, if not, I throw an error
+                // Additionally, I check whether the price has not changed, and if so, I change it
                 if (newQuantity > product.getQuantity()) {
                     throw new InsufficientQuantityException();
                 } else {
+                    double newCartPrice = cart.getCartPrice() - (existingCartProduct.getProductPrice() * existingCartProduct.getQuantity()) + (product.getPrice() * newQuantity);
+                    cart.setCartPrice(newCartPrice);
+                    existingCartProduct.setProductPrice(product.getPrice());
                     existingCartProduct.setQuantity(newQuantity);
                     cartProductRepository.save(existingCartProduct);
                 }
@@ -72,7 +77,10 @@ public class CartServiceImpl implements CartService {
                     throw new InsufficientQuantityException();
                 } else {
                     cartProduct.setProduct(product);
+                    cartProduct.setProductPrice(product.getPrice());
                     CartProduct newCartProduct = cartProductRepository.save(cartProduct);
+                    double newCartPrice = cart.getCartPrice() + newCartProduct.getProductPrice() * newCartProduct.getQuantity();
+                    cart.setCartPrice(newCartPrice);
                     cart.getCartProducts().add(newCartProduct);
                 }
             }
@@ -88,8 +96,10 @@ public class CartServiceImpl implements CartService {
                 cart.setUserId(userId);
                 cart = cartRepository.save(cart);
                 cartProduct.setProduct(product);
+                cartProduct.setProductPrice(product.getPrice());
                 CartProduct newCartProduct = cartProductRepository.save(cartProduct);
                 cart.setCartProducts(new ArrayList<>(List.of(newCartProduct)));
+                cart.setCartPrice(newCartProduct.getProductPrice() * newCartProduct.getQuantity());
                 cart = cartRepository.save(cart);
             }
         }
@@ -104,6 +114,8 @@ public class CartServiceImpl implements CartService {
         Cart cart = getCartByUserId(userId);
         CartProduct cartProduct = getCartProduct(id);
         cart.getCartProducts().remove(cartProduct);
+        double newCartPrice = cart.getCartPrice() - cartProduct.getQuantity() * cartProduct.getProductPrice();
+        cart.setCartPrice(newCartPrice);
         cartProductRepository.delete(cartProduct);
         cart = cartRepository.save(cart);
         return cart;
@@ -123,7 +135,10 @@ public class CartServiceImpl implements CartService {
             throw new InsufficientQuantityException();
         }
 
+        double newCartPrice = cart.getCartPrice() - (cartProduct.getProductPrice() * cartProduct.getQuantity()) + (product.getPrice() * newQuantity);
+        cart.setCartPrice(newCartPrice);
         cart.getCartProducts().remove(cartProduct);
+        cartProduct.setProductPrice(product.getPrice());
         cartProduct.setQuantity(newQuantity);
         cart.getCartProducts().add(cartProduct);
         cartProductRepository.save(cartProduct);
@@ -176,9 +191,7 @@ public class CartServiceImpl implements CartService {
     public void deleteCart(Long userId) {
         Cart cart = getCartByUserId(userId);
 
-        for (CartProduct cartProduct : cart.getCartProducts()) {
-            cartProductRepository.delete(cartProduct);
-        }
+        cartProductRepository.deleteAll(cart.getCartProducts());
 
         if (cart.getAddress() != null) {
             addressRepository.delete(cart.getAddress());
