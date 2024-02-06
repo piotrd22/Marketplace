@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.net.URL;
 import java.util.Set;
 
 @Data
@@ -25,4 +26,6 @@ public class AddProductDto {
 
     @NotEmpty
     private Set<Long> categoryIds;
+
+    private URL photoUrl;
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.net.URL;
 import java.util.Set;
 
 @Data
@@ -25,4 +26,6 @@ public class UpdateProductDto {
 
     @Min(0)
     private Double price;
+
+    private URL photoUrl;
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +29,9 @@ public class Product {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    // Normally we would have an url of a photo from some S3 or other bucket, but here I will just send the URL from the frontend
+    private URL photoUrl;
 
     @ManyToMany(cascade = {CascadeType.REFRESH})
     // I use Set to ensure category is unique

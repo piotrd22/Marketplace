@@ -16,6 +16,7 @@ public class ProductDto {
     private String description;
     private Double price;
     private Integer quantity;
+    private String photoUrl;
     private boolean isDeleted;
     private Set<CategoryDto> categories;
     private LocalDateTime createdAt;
