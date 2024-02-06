@@ -1,24 +1,89 @@
 package com.example.marketplace.services.order;
 
 import com.example.marketplace.enums.OrderStatus;
+import com.example.marketplace.exceptions.BadRequestException;
 import com.example.marketplace.exceptions.NotFoundException;
-import com.example.marketplace.models.Address;
-import com.example.marketplace.models.Order;
-import com.example.marketplace.models.Payment;
-import com.example.marketplace.repositories.OrderRepository;
+import com.example.marketplace.models.*;
+import com.example.marketplace.repositories.*;
+import com.example.marketplace.services.cart.CartService;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderProductRepository orderProductRepository;
+    private final PaymentRepository paymentRepository;
+    private final CartService cartService;
 
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, OrderProductRepository orderProductRepository, PaymentRepository paymentRepository, CartService cartService) {
         this.orderRepository = orderRepository;
+        this.orderProductRepository = orderProductRepository;
+        this.paymentRepository = paymentRepository;
+        this.cartService = cartService;
+    }
+
+    @Override
+    @Transactional
+    public Order placeOrder(Long userId) {
+        Cart cart = cartService.getCartByUserId(userId);
+
+        // There should be better validation here, but it's enough for a project like this
+        if (cart.getPayment() == null) {
+            throw new BadRequestException("Cart is not ready for placing order. Payment is not set.");
+        }
+        if (cart.getAddress() == null) {
+            throw new BadRequestException("Cart is not ready for placing order. Address is not set.");
+        }
+        if (cart.getCartProducts().isEmpty()) {
+            throw new BadRequestException("Cart is not ready for placing order. Cart is empty.");
+        }
+
+        boolean isPaid = payForOrder();
+        LocalDateTime payTime = LocalDateTime.now();
+        if (!isPaid) {
+            throw new BadRequestException("Payment failed. Try again.");
+        }
+
+        List<OrderProduct> orderProducts = new ArrayList<>();
+
+        for (CartProduct cartProduct : cart.getCartProducts()) {
+
+            OrderProduct orderProduct = OrderProduct.builder()
+                    .product(cartProduct.getProduct())
+                    .quantity(cartProduct.getQuantity())
+                    .productPrice(cartProduct.getProductPrice())
+                    .build();
+
+            orderProducts.add(orderProduct);
+        }
+
+        orderProducts = orderProductRepository.saveAll(orderProducts);
+
+        Order newOrder = Order.builder()
+                .orderPrice(cart.getCartPrice())
+                .orderProducts(orderProducts)
+                .orderStatus(OrderStatus.PAID)
+                .payment(cart.getPayment())
+                .userId(cart.getUserId())
+                .address(cart.getAddress())
+                .build();
+
+        Payment payment = newOrder.getPayment();
+        payment.setPaymentDate(payTime);
+        payment = paymentRepository.save(payment);
+        newOrder.setPayment(payment);
+
+        newOrder = orderRepository.save(newOrder);
+        cartService.deleteCart(userId);
+        return newOrder;
     }
 
     @Override
@@ -32,7 +97,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order saveOrder(Order order) {
-        return orderRepository.save(order);
+    public List<Order> getOrdersByUserId(Long userId, Pageable pageable) {
+        return orderRepository.findByUserId(userId, pageable).getContent();
+    }
+
+    // Mock -- 9 out of 10 cases will be paid
+    private boolean payForOrder() {
+        Random random = new Random();
+        int randomNumber = random.nextInt(10);
+        return randomNumber < 9;
     }
 }
