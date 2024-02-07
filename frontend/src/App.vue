@@ -2,9 +2,9 @@
   <v-app>
     <v-main>
       <Navbar />
-      <div class="home-container">
+      <v-container class="custom-container">
         <router-view />
-      </div>
+      </v-container>
     </v-main>
     <Footer />
   </v-app>
@@ -23,10 +23,7 @@ export default {
 </script>
 
 <style scoped>
-.home-container {
-  height: 70vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.custom-container {
+  max-width: 80%;
 }
 </style>
