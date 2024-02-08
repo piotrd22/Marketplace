@@ -5,6 +5,7 @@ import com.example.marketplace.exceptions.NotFoundException;
 import com.example.marketplace.models.Product;
 import com.example.marketplace.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> searchProducts(ProductFilterDto filterDto, Pageable pageable) {
-        return productRepository.searchProducts(filterDto, pageable).getContent();
+    public Page<Product> searchProducts(ProductFilterDto filterDto, Pageable pageable) {
+        return productRepository.searchProducts(filterDto, pageable);
     }
 }

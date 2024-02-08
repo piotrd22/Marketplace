@@ -9,6 +9,7 @@ import com.example.marketplace.models.Product;
 import com.example.marketplace.services.product.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,10 +70,10 @@ public class ProductController extends AbstractControllerBase {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<List<ProductDto>> searchProducts(@RequestBody @Valid ProductFilterDto filterDto, Pageable pageable) {
+    public ResponseEntity<Page<ProductDto>> searchProducts(@RequestBody @Valid ProductFilterDto filterDto, Pageable pageable) {
         logger.info("Inside: ProductController -> searchProducts()...");
-        List<Product> products = productService.searchProducts(filterDto, pageable);
-        List<ProductDto> productDtos = products.stream().map(productMapper::productToProductDto).toList();
+        Page<Product> products = productService.searchProducts(filterDto, pageable);
+        Page<ProductDto> productDtos = products.map(productMapper::productToProductDto);
         return ResponseEntity.ok().body(productDtos);
     }
 }
