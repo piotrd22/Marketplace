@@ -46,20 +46,6 @@
 
     <v-divider class="mx-4 mb-1"></v-divider>
 
-    <!-- <v-card-title>Tonight's availability</v-card-title>
-
-    <div class="px-4">
-      <v-chip-group v-model="selection">
-        <v-chip>5:30PM</v-chip>
-
-        <v-chip>7:30PM</v-chip>
-
-        <v-chip>8:00PM</v-chip>
-
-        <v-chip>9:00PM</v-chip>
-      </v-chip-group>
-    </div> -->
-
     <v-card-actions>
       <v-form @submit.prevent="addToCart">
         <v-row align="center">
