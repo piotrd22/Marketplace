@@ -1,12 +1,12 @@
 <template>
   <v-container>
-    <v-form @submit.prevent="search">
+    <v-form @submit.prevent="searchWithFirstPage">
       <v-row>
         <v-col cols="12" md="2">
           <v-text-field
             v-model="searchName"
             label="Name"
-            outlined
+            variant="outlined"
           ></v-text-field>
         </v-col>
 
@@ -18,7 +18,7 @@
             item-value="id"
             label="Categories"
             multiple
-            outlined
+            variant="outlined"
           >
             <template v-slot:selection="{ item, index }">
               <v-chip v-if="index < 1">
@@ -40,7 +40,7 @@
             label=" Min price"
             prefix="$"
             type="number"
-            outlined
+            variant="outlined"
           ></v-text-field>
         </v-col>
 
@@ -50,7 +50,7 @@
             label="Max price"
             prefix="$"
             type="number"
-            outlined
+            variant="outlined"
           ></v-text-field>
         </v-col>
 
@@ -61,14 +61,22 @@
             item-title="key"
             item-value="value"
             label="Sort by"
-            outlined
+            variant="outlined"
           ></v-select>
         </v-col>
 
-        <v-btn type="submit" append-icon="mdi-magnify" class="ml-2"
+        <v-btn
+          type="submit"
+          color="secondary"
+          append-icon="mdi-magnify"
+          class="ml-2"
           >Search</v-btn
         >
-        <v-btn @click="handleReset" append-icon="mdi-close" class="ml-2"
+        <v-btn
+          @click="handleReset"
+          color="warning"
+          append-icon="mdi-close"
+          class="ml-2"
           >Clear</v-btn
         >
       </v-row>
@@ -76,28 +84,34 @@
 
     <div class="my-12">
       <v-row justify="end">
-        <v-progress-circular v-if="loading" indeterminate></v-progress-circular>
-        <v-col v-else cols="12" md="2">
+        <v-col cols="12" md="2">
           <v-select
             v-model="size"
             :items="pageSizeOptions"
             label="Items per page"
-            outlined
+            variant="outlined"
           ></v-select>
         </v-col>
       </v-row>
-      <v-row>
+      <v-row v-if="loading">
+        <v-col class="text-center">
+          <v-progress-circular indeterminate></v-progress-circular>
+        </v-col>
+      </v-row>
+      <v-row v-else>
         <v-col v-for="product in products" :key="product.id" cols="12" md="4">
           <product :product="product"></product>
         </v-col>
+        <v-col class="text-center">
+          <v-pagination
+            v-model="page"
+            class="my-4"
+            :length="totalPages"
+            :total-visible="6"
+          ></v-pagination>
+        </v-col>
       </v-row>
     </div>
-    <v-pagination
-      v-model="page"
-      class="my-4"
-      :length="totalPages"
-      :total-visible="6"
-    ></v-pagination>
   </v-container>
 </template>
 
@@ -114,7 +128,7 @@ export default {
       { key: "By price ascending", value: "price,asc" },
       { key: "By price descending", value: "price,desc" },
     ];
-    const pageSizeOptions = [10, 15, 25, 50];
+    const pageSizeOptions = [9, 15, 30, 60];
 
     return {
       searchName: "",
@@ -145,6 +159,10 @@ export default {
         console.error(error);
       }
     },
+    async searchWithFirstPage() {
+      this.page = 1;
+      await this.search();
+    },
     async search() {
       try {
         this.loading = true;
@@ -157,6 +175,10 @@ export default {
         );
         this.totalPages = res.data.totalPages;
         this.products = res.data.content;
+
+        // setTimeout(() => {
+        //   this.loading = false
+        // }, 200);
         this.loading = false;
       } catch (error) {
         this.loading = false;
@@ -188,14 +210,18 @@ export default {
       this.minPrice = null;
       this.maxPrice = null;
       this.sort = this.sortItems[0].value;
-      this.search();
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "auto" });
     },
   },
   watch: {
     size() {
+      this.page = 1;
       this.search();
     },
     page() {
+      this.scrollToTop();
       this.search();
     },
   },

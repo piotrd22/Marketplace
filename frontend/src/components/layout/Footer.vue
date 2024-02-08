@@ -4,7 +4,7 @@
       <v-row align="center">
         <v-col>
           <div class="caption">
-            &copy; {{ new Date().getFullYear() }} eCommerve | Author: Piotr
+            &copy; {{ new Date().getFullYear() }} eCommerce | Author: Piotr
             Damrych | 2024
           </div>
         </v-col>

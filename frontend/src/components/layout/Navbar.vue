@@ -5,9 +5,22 @@
     </v-btn>
     <v-toolbar-title>
       <v-btn @click="navigateHome" text>
-        <span class="portal-text">ECommerce</span>
+        <span class="portal-text">eCommerce</span>
       </v-btn>
     </v-toolbar-title>
+
+    <v-btn @click="navigateCart" prepend-icon="mdi-cart-outline"> Cart </v-btn>
+
+    <v-btn @click="navigateProfile" text>
+      @randomuser
+      <v-avatar size="36" class="avatar ml-2">
+        <img
+          src="../../assets/default-avatar.jpg"
+          alt="User Avatar"
+          class="avatar-image"
+        />
+      </v-avatar>
+    </v-btn>
   </v-app-bar>
 </template>
 
@@ -19,12 +32,20 @@ export default {
     },
   },
   methods: {
-    navigateHome() {
-      const routeName = "Home";
-      this.$router.push({ name: routeName });
-    },
     goBack() {
       this.$router.go(-1);
+    },
+    navigateHome() {
+      this.navigate("Home");
+    },
+    navigateCart() {
+      this.navigate("Cart");
+    },
+    navigateProfile() {
+      this.navigate("Profile");
+    },
+    navigate(routeName) {
+      this.$router.push({ name: routeName });
     },
   },
 };
