@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import cartService from "../services/cartService";
-import enumService from "../services/enumService";
+import cartService from "../../services/cartService";
+import enumService from "../../services/enumService";
 
 export default {
   props: {
@@ -47,7 +47,7 @@ export default {
         const body = { paymentMethod: this.paymentMethod };
         const res = await cartService.addPaymentToCart(body);
         this.updateCartFromResponse(res?.data);
-        this.$toast.info("Successfully saved address.");
+        this.$toast.success("Successfully saved address.");
       } catch (error) {
         console.error("addPaymentToCart() AddPaymentToCartForm.vue: ", error);
         const errorMessage =

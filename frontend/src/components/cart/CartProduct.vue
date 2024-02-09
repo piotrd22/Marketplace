@@ -25,9 +25,9 @@
       </div>
     </v-card-text>
 
-    <v-divider class="mx-4 mb-1"></v-divider>
+    <v-divider v-if="!isSummary" class="mx-4 mb-1"></v-divider>
 
-    <v-card-actions>
+    <v-card-actions v-if="!isSummary">
       <v-form @submit.prevent="updateProductQuantityInCart">
         <v-row align="center">
           <v-col cols="12" md="4">
@@ -55,7 +55,7 @@
       </v-form>
     </v-card-actions>
 
-    <v-card-actions>
+    <v-card-actions v-if="!isSummary">
       <v-form @submit.prevent="removeProductFromCart">
         <v-row align="center">
           <v-col cols="12" md="12" class="text-center">
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import cartService from "../services/cartService";
+import cartService from "../../services/cartService";
 
 export default {
   props: {
@@ -84,6 +84,7 @@ export default {
       required: true,
     },
     updateCartFromResponse: Function,
+    isSummary: Boolean,
   },
   mounted() {
     this.quantity = this.product.quantity;
@@ -101,7 +102,7 @@ export default {
           this.quantity,
         );
         this.updateCartFromResponse(res?.data);
-        this.$toast.info("Successfully updated product quantity in cart.");
+        this.$toast.success("Successfully updated product quantity in cart.");
       } catch (error) {
         console.error(
           "updateProductQuantityInCart() CartOrderProduct.vue: ",
@@ -116,7 +117,7 @@ export default {
       try {
         const res = await cartService.removeProductFromCart(this.product.id);
         this.updateCartFromResponse(res?.data);
-        this.$toast.info("Successfully deleted product from cart.");
+        this.$toast.success("Successfully deleted product from cart.");
       } catch (error) {
         console.error("removeProductFromCart() CartOrderProduct.vue: ", error);
         const errorMessage =

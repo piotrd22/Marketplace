@@ -30,8 +30,8 @@
 </template>
 
 <script>
-import countries from "../assets/countries";
-import cartService from "../services/cartService";
+import countries from "../../assets/countries";
+import cartService from "../../services/cartService";
 
 export default {
   props: {
@@ -66,7 +66,7 @@ export default {
         };
         const res = await cartService.addAddressToCart(body);
         this.updateCartFromResponse(res?.data);
-        this.$toast.info("Successfully saved address.");
+        this.$toast.success("Successfully saved address.");
       } catch (error) {
         console.error("addAddressToCart() AddAddressToCartForm.vue: ", error);
         const errorMessage =
