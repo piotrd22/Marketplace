@@ -16,7 +16,11 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String addressInfo;
+    private String address;
+    private String city;
+    private String state;
+    private String zipCode;
+    private String country;
 
     @Column(nullable = false)
     // MockOnly

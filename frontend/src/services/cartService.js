@@ -15,9 +15,13 @@ export default {
     return httpClient.delete("/cart");
   },
   addAddressToCart(body) {
-    return httpClient.post("/cart/address", body);
+    return httpClient.put("/cart/address", body);
   },
   addPaymentToCart(body) {
-    return httpClient.post("/cart/payment", body);
+    return httpClient.put("/cart/payment", body);
+  },
+  updateProductQuantityInCart(id, newQuantity) {
+    const uri = `/cart/cart-product/${id}`;
+    return httpClient.put(uri, { newQuantity });
   },
 };

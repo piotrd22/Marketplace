@@ -10,9 +10,7 @@ public interface CartService {
     Cart addProductToCart(CartProduct cartProduct, Long userId);
     Cart removeProductFromCart(Long id, Long userId);
     Cart updateProductQuantityInCart(Long userId, Long cartProductId, int newQuantity);
-    Cart addAddressToCart(Long userId, Address address);
-    Cart addPaymentToCart(Long userId, Payment payment);
-    Cart updateAddressInCart(Long userId, Address address);
-    Cart updatePaymentInCart(Long userId, Payment payment);
+    Cart saveAddressToCart(Long userId, Address address);
+    Cart savePaymentToCart(Long userId, Payment payment);
     void deleteCart(Long userId);
 }

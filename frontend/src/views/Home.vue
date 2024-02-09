@@ -102,7 +102,7 @@
         <v-col v-for="product in products" :key="product.id" cols="12" md="4">
           <product :product="product"></product>
         </v-col>
-        <v-col class="text-center">
+        <v-col cols="12" md="12" class="text-center">
           <v-pagination
             v-model="page"
             class="my-4"

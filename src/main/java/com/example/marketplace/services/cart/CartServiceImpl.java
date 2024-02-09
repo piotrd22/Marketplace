@@ -148,11 +148,19 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public Cart addAddressToCart(Long userId, Address address) {
+    public Cart saveAddressToCart(Long userId, Address address) {
         Cart cart = getCartByUserId(userId);
 
         if (cart.getAddress() != null) {
-            throw new AlreadyExistsException("Cart with user id '%s' already have address.".formatted(userId));
+            Address updatedAddress = cart.getAddress();
+            updatedAddress.setAddress(address.getAddress());
+            updatedAddress.setZipCode(address.getZipCode());
+            updatedAddress.setCity(address.getCity());
+            updatedAddress.setState(address.getState());
+            updatedAddress.setCountry(address.getCountry());
+            updatedAddress = addressRepository.save(updatedAddress);
+            cart.setAddress(updatedAddress);
+            return cartRepository.save(cart);
         }
 
         address.setUserId(userId);
@@ -163,27 +171,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public Cart addPaymentToCart(Long userId, Payment payment) {
+    public Cart savePaymentToCart(Long userId, Payment payment) {
         Cart cart = getCartByUserId(userId);
 
         if (cart.getPayment() != null) {
-            throw new AlreadyExistsException("Cart with user id '%s' already have payment method.".formatted(userId));
+            Payment updatedPayment = cart.getPayment();
+            updatedPayment.setPaymentMethod(payment.getPaymentMethod());
+            updatedPayment = paymentRepository.save(updatedPayment);
+            cart.setPayment(updatedPayment);
+            return cartRepository.save(cart);
         }
 
         payment.setUserId(userId);
         payment = paymentRepository.save(payment);
         cart.setPayment(payment);
         return cartRepository.save(cart);
-    }
-
-    @Override
-    public Cart updateAddressInCart(Long userId, Address address) {
-        return null;
-    }
-
-    @Override
-    public Cart updatePaymentInCart(Long userId, Payment payment) {
-        return null;
     }
 
     @Override

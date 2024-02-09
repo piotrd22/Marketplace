@@ -9,7 +9,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddAddressToCartDto {
-    // Normally, of course, validation and a different address model are needed, but here only for the test
+    // Normally, of course, better validation and a different address model are needed, but here only for the test
     @NotBlank
-    private String addressInfo;
+    private String address;
+
+    @NotBlank
+    private String city;
+
+    @NotBlank
+    private String state;
+
+    @NotBlank
+    private String zipCode;
+
+    @NotBlank
+    private String country;
 }

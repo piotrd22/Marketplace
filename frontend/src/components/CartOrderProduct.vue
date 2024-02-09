@@ -20,7 +20,9 @@
     <v-card-text>
       <div>Price: {{ product.productPrice }}$</div>
       <div>Quantity: {{ product.quantity }}</div>
-      <div>Total price: {{ product.productPrice * product.quantity }}$</div>
+      <div>
+        Total price: {{ (product.productPrice * product.quantity).toFixed(2) }}$
+      </div>
     </v-card-text>
 
     <v-divider class="mx-4 mb-1"></v-divider>
@@ -59,7 +61,7 @@
           <v-col cols="12" md="12" class="text-center">
             <v-btn
               color="warning"
-              variant="text"
+              variant="tonal"
               type="submit"
               prepend-icon="mdi-trash-can-outline"
             >
@@ -81,6 +83,7 @@ export default {
       type: Object,
       required: true,
     },
+    updateCartFromResponse: Function,
   },
   mounted() {
     this.quantity = this.product.quantity;
@@ -92,10 +95,34 @@ export default {
   },
   methods: {
     async updateProductQuantityInCart() {
-      console.log("heheh");
+      try {
+        const res = await cartService.updateProductQuantityInCart(
+          this.product.id,
+          this.quantity,
+        );
+        this.updateCartFromResponse(res?.data);
+        this.$toast.info("Successfully updated product quantity in cart.");
+      } catch (error) {
+        console.error(
+          "updateProductQuantityInCart() CartOrderProduct.vue: ",
+          error,
+        );
+        const errorMessage =
+          error.response?.data.message || "Updating product quantity failed.";
+        this.$toast.error(errorMessage);
+      }
     },
     async removeProductFromCart() {
-      console.log("removed");
+      try {
+        const res = await cartService.removeProductFromCart(this.product.id);
+        this.updateCartFromResponse(res?.data);
+        this.$toast.info("Successfully deleted product from cart.");
+      } catch (error) {
+        console.error("removeProductFromCart() CartOrderProduct.vue: ", error);
+        const errorMessage =
+          error.response?.data.message || "Removing product from cart failed.";
+        this.$toast.error(errorMessage);
+      }
     },
   },
 };

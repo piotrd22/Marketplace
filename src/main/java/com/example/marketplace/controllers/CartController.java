@@ -79,21 +79,21 @@ public class CartController extends AbstractControllerBase {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/address")
+    @PutMapping("/address")
     public ResponseEntity<CartDto> addAddressToCart(@RequestBody @Valid AddAddressToCartDto dto) {
         logger.info("Inside: CartController -> addAddressToCart()...");
         Long userId = getUserId();
         Address address = addressMapper.addAddressToCartDtoToAddress(dto);
-        Cart cart = cartService.addAddressToCart(userId, address);
+        Cart cart = cartService.saveAddressToCart(userId, address);
         return ResponseEntity.ok().body(cartMapper.cartToCartDto(cart));
     }
 
-    @PostMapping("/payment")
+    @PutMapping("/payment")
     public ResponseEntity<CartDto> addPaymentToCart(@RequestBody @Valid AddPaymentToCartDto dto) {
         logger.info("Inside: CartController -> addPaymentToCart()...");
         Long userId = getUserId();
         Payment payment = paymentMapper.addPaymentToCartDtoToPayment(dto);
-        Cart cart = cartService.addPaymentToCart(userId, payment);
+        Cart cart = cartService.savePaymentToCart(userId, payment);
         return ResponseEntity.ok().body(cartMapper.cartToCartDto(cart));
     }
 }
