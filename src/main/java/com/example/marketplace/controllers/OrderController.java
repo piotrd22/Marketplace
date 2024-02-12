@@ -5,6 +5,7 @@ import com.example.marketplace.mappers.OrderMapper;
 import com.example.marketplace.models.Order;
 import com.example.marketplace.services.order.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,11 +40,12 @@ public class OrderController extends AbstractControllerBase {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<OrderDto>> getOrdersByUserId(Pageable pageable) {
+    public ResponseEntity<Page<OrderDto>> getOrdersByUserId(Pageable pageable) {
         logger.info("Inside: OrderController -> getOrdersByUserId()...");
         Long userId = getUserId();
-        List<Order> orders = orderService.getOrdersByUserId(userId, pageable);
-        return ResponseEntity.ok().body(orders.stream().map(orderMapper::orderToOrderDto).toList());
+        Page<Order> orders = orderService.getOrdersByUserId(userId, pageable);
+        Page<OrderDto> orderDtos = orders.map(orderMapper::orderToOrderDto);
+        return ResponseEntity.ok().body(orderDtos);
     }
 
     @PostMapping

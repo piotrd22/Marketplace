@@ -13,6 +13,7 @@ public abstract class CartProductMapper {
     @Mapping(source = "productId", target = "product", qualifiedByName = "productIdToProduct")
     public abstract CartProduct addProductToCartDtoToCartProduct(AddProductToCartDto dto);
 
+    // TODO Change it so that it get payment from service here instead of creating an id or remove it and pass only parameters to the service
     @Named("productIdToProduct")
     public Product productIdToProduct(Long id) {
         Product product = new Product();

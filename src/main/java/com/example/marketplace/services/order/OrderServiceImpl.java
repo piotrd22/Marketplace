@@ -9,6 +9,7 @@ import com.example.marketplace.repositories.*;
 import com.example.marketplace.services.cart.CartService;
 import com.example.marketplace.services.product.ProductService;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -112,8 +113,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getOrdersByUserId(Long userId, Pageable pageable) {
-        return orderRepository.findByUserId(userId, pageable).getContent();
+    public Page<Order> getOrdersByUserId(Long userId, Pageable pageable) {
+        return orderRepository.findByUserId(userId, pageable);
     }
 
     // Mock -- 9 out of 10 cases will be paid
