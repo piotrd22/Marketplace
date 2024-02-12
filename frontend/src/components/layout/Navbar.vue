@@ -11,21 +11,44 @@
 
     <v-btn @click="navigateCart" prepend-icon="mdi-cart-outline"> Cart </v-btn>
 
-    <v-btn @click="navigateProfile" text>
-      @randomuser
-      <v-avatar size="36" class="avatar ml-2">
-        <img
-          src="../../assets/default-avatar.jpg"
-          alt="User Avatar"
-          class="avatar-image"
-        />
-      </v-avatar>
-    </v-btn>
+    <v-menu>
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" text>
+          @randomuser
+          <v-avatar size="36" class="avatar ml-2">
+            <img
+              src="../../assets/default-avatar.jpg"
+              alt="User Avatar"
+              class="avatar-image"
+            />
+          </v-avatar>
+        </v-btn>
+      </template>
+
+      <v-list>
+        <v-list-item
+          v-for="(item, i) in items"
+          :key="i"
+          :value="i"
+          @click="navigate(item.route)"
+        >
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </v-app-bar>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      items: [
+        { title: "My Profile", route: "Profile" },
+        { title: "My Orders", route: "Orders" },
+      ],
+    };
+  },
   computed: {
     isGoBackPage() {
       return this.$route.name !== "Home";
@@ -40,9 +63,6 @@ export default {
     },
     navigateCart() {
       this.navigate("Cart");
-    },
-    navigateProfile() {
-      this.navigate("Profile");
     },
     navigate(routeName) {
       this.$router.push({ name: routeName });

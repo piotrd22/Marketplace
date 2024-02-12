@@ -2,7 +2,7 @@
   <v-card class="mx-auto my-12" max-width="374">
     <v-img
       v-if="product.photoUrl"
-      cover
+      contain
       height="250"
       :src="product.photoUrl"
     ></v-img>
@@ -37,10 +37,17 @@
         <div class="text-grey ms-4">4.5 (413)</div>
       </v-row>
 
-      <div class="my-4 text-subtitle-1">$ • {{ product.price }}</div>
+      <div class="mt-4 text-subtitle-1">$ • {{ product.price }}</div>
 
-      <div>
-        {{ product.description }}
+      <div class="text-center">
+        <v-btn
+          class="mt-4"
+          color="primary"
+          variant="outlined"
+          @click="navigateToProductInfo"
+        >
+          MORE
+        </v-btn>
       </div>
     </v-card-text>
 
@@ -109,6 +116,9 @@ export default {
         this.$toast.error(errorMessage);
       }
       this.quantity = 1;
+    },
+    navigateToProductInfo() {
+      this.$router.push({ name: "ProductInfo", params: this.product });
     },
   },
 };

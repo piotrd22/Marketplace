@@ -5,4 +5,7 @@ export default {
     const uri = `/products/search?size=${size}&page=${page}&sort=${sort}`;
     return httpClient.post(uri, criteria);
   },
+  getProductById(id) {
+    return httpClient.get(`/products/${id}`);
+  },
 };

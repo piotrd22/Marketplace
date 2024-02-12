@@ -2,7 +2,7 @@
   <v-card class="mx-auto my-12" max-width="374">
     <v-img
       v-if="product?.product?.photoUrl"
-      cover
+      contain
       height="200"
       :src="product?.product?.photoUrl"
     ></v-img>
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import cartService from "../../services/cartService";
+import cartService from "../services/cartService";
 
 export default {
   props: {

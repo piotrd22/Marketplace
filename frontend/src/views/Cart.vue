@@ -32,10 +32,10 @@
             cols="12"
             md="4"
           >
-            <cart-product
+            <cart-order-product
               :product="product"
               :update-cart-from-response="updateCartFromResponse"
-            ></cart-product>
+            ></cart-order-product>
           </v-col>
         </v-row>
 
@@ -108,7 +108,10 @@
             cols="12"
             md="4"
           >
-            <cart-product :product="product" :is-summary="true"></cart-product>
+            <cart-order-product
+              :product="product"
+              :is-summary="true"
+            ></cart-order-product>
           </v-col>
 
           <v-col cols="12" mdi="12">
@@ -162,7 +165,7 @@
 <script>
 import orderService from "../services/orderService";
 import cartService from "../services/cartService";
-import CartProduct from "../components/cart/CartProduct.vue";
+import CartOrderProduct from "../components/CartOrderProduct.vue";
 import AddAddressToCartForm from "../components/cart/AddAddressToCartForm.vue";
 import AddPaymentToCartForm from "../components/cart/AddPaymentToCartForm.vue";
 
@@ -215,9 +218,9 @@ export default {
     },
     async placeOrder() {
       try {
-        await orderService.placeOrder();
+        const res = await orderService.placeOrder();
         this.$toast.success("Succesfully placed order.");
-        this.$router.push({ name: "Home" });
+        this.$router.push({ name: "OrderInfo", params: res?.data });
       } catch (error) {
         console.error("placeOrder() Cart.vue: ", error);
         const errorMessage =
@@ -239,7 +242,7 @@ export default {
     },
   },
   components: {
-    CartProduct,
+    CartOrderProduct,
     AddAddressToCartForm,
     AddPaymentToCartForm,
   },
