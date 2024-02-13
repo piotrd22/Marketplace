@@ -42,7 +42,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public Cart addProductToCart(CartProduct cartProduct, Long userId) {
-        Product product = productService.getProduct(cartProduct.getProduct().getId());
+        Product product = cartProduct.getProduct();
         Optional<Cart> oldCart = cartRepository.findByUserId(userId);
 
         Cart cart;

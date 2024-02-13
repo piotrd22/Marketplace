@@ -10,7 +10,7 @@
       v-else
       cover
       height="200"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+      src="../assets/default-product.jpg"
     ></v-img>
 
     <v-card-item>
@@ -55,7 +55,9 @@
       </v-form>
     </v-card-actions>
 
-    <v-card-actions v-if="!isSummary">
+    <v-divider v-if="!isSummary" class="mx-4 mb-1"></v-divider>
+
+    <v-card-actions v-if="!isSummary" class="d-flex justify-center">
       <v-form @submit.prevent="removeProductFromCart">
         <v-row align="center">
           <v-col cols="12" md="12" class="text-center">

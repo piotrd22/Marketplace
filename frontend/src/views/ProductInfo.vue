@@ -7,25 +7,22 @@
     </v-row>
 
     <v-row v-else-if="product">
-      <v-col cols="12" md="6">
-        <v-img
-          v-if="product?.photoUrl"
-          contain
-          max-height="500"
-          max-width="500"
-          :src="product?.photoUrl"
-        ></v-img>
-        <v-img
-          v-else
-          cover
-          max-height="500"
-          max-width="500"
-          src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-        ></v-img>
-      </v-col>
-      <v-col cols="12" md="6">
+      <v-col cols="12" md="12">
         <v-card class="mx-auto my-12" variant="outlined">
           <v-card-item>
+            <v-img
+              v-if="product.photoUrl"
+              contain
+              height="250"
+              :src="product.photoUrl"
+            ></v-img>
+            <v-img
+              v-else
+              cover
+              height="250"
+              src="../assets/default-product.jpg"
+            ></v-img>
+
             <v-card-title>{{ product.name }}</v-card-title>
 
             <v-card-subtitle>
@@ -55,13 +52,21 @@
 
             <div class="mt-4 text-subtitle-1">$ • {{ product.price }}</div>
 
-            <div v-if="product?.description" class="mt-4 text-subtitle-2">
-              {{ product?.description }}
+            <div
+              v-if="product?.categories.length > 0"
+              v-for="category in product?.categories"
+              :key="category.id"
+              class="mt-4"
+            >
+              <v-chip color="primary" label>
+                <v-icon start icon="mdi-label"></v-icon>
+                {{ category.name }}
+              </v-chip>
             </div>
           </v-card-text>
 
           <v-divider class="mx-4 mb-1"></v-divider>
-          <v-card-actions>
+          <v-card-actions class="d-flex justify-center">
             <v-form @submit.prevent="addToCart">
               <v-row align="center">
                 <v-col cols="12" md="4">
@@ -87,6 +92,18 @@
               </v-row>
             </v-form>
           </v-card-actions>
+        </v-card>
+      </v-col>
+
+      <v-col v-if="product?.description" cols="12" md="12">
+        <v-card class="mx-auto" variant="outlined">
+          <v-card-title>Description</v-card-title>
+
+          <v-card-text>
+            <div class="mt-4 text-subtitle-2">
+              {{ product?.description }}
+            </div>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>

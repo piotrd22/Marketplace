@@ -16,11 +16,11 @@
         <v-btn v-bind="props" text>
           @randomuser
           <v-avatar size="36" class="avatar ml-2">
-            <img
+            <v-img
               src="../../assets/default-avatar.jpg"
               alt="User Avatar"
               class="avatar-image"
-            />
+            ></v-img>
           </v-avatar>
         </v-btn>
       </template>

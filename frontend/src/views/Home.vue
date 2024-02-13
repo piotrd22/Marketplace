@@ -146,9 +146,10 @@ export default {
       loading: false,
     };
   },
-  mounted() {
-    this.getCategories();
-    this.search();
+  async mounted() {
+    await this.getCategories();
+    this.readQueryParams();
+    await this.search();
   },
   methods: {
     async getCategories() {
@@ -175,10 +176,6 @@ export default {
         );
         this.totalPages = res.data.totalPages;
         this.products = res.data.content;
-
-        // setTimeout(() => {
-        //   this.loading = false
-        // }, 200);
         this.loading = false;
       } catch (error) {
         this.loading = false;
@@ -214,15 +211,110 @@ export default {
     scrollToTop() {
       window.scrollTo({ top: 0, behavior: "auto" });
     },
+    readQueryParams() {
+      const { query } = this.$route;
+
+      if (query.page) {
+        this.page = parseInt(query.page);
+      }
+
+      if (query.size) {
+        this.size = parseInt(query.size);
+      }
+
+      if (query.searchName) {
+        this.searchName = query.searchName;
+      }
+
+      if (query.minPrice) {
+        this.minPrice = parseFloat(query.minPrice);
+      }
+
+      if (query.maxPrice) {
+        this.maxPrice = parseFloat(query.maxPrice);
+      }
+
+      if (query.sort) {
+        const validSort = this.sortItems.some(
+          (item) => item.value === query.sort,
+        );
+        if (validSort) {
+          this.sort = query.sort;
+        } else {
+          this.sort = this.sortItems[0].value;
+        }
+      }
+
+      if (query.selectedCategories) {
+        // I'm checking if anyone has added a category to the url that doesn't exist
+        const selectedCategories = query.selectedCategories
+          .split(",")
+          .map((id) => parseInt(id));
+        const validCategories = selectedCategories.every((categoryId) =>
+          this.categories.some((category) => category.id === categoryId),
+        );
+        if (validCategories) {
+          this.selectedCategories = selectedCategories;
+        } else {
+          const validSelectedCategories = selectedCategories.filter(
+            (categoryId) =>
+              this.categories.some((category) => category.id === categoryId),
+          );
+          this.selectedCategories = validSelectedCategories;
+        }
+      }
+    },
+    writeQuery(newVal, queryName) {
+      const query = { ...this.$route.query };
+      if (!newVal) {
+        delete query[`${queryName}`];
+      } else {
+        query[`${queryName}`] = newVal;
+      }
+      this.$router.push({ path: this.$route.path, query });
+    },
   },
   watch: {
-    size() {
+    size(newVal) {
+      if (newVal === this.pageSizeOptions[0]) {
+        this.writeQuery(null, "size");
+      } else {
+        this.writeQuery(newVal, "size");
+      }
       this.page = 1;
       this.search();
     },
-    page() {
+    page(newVal) {
+      if (newVal === 1) {
+        this.writeQuery(null, "page");
+      } else {
+        this.writeQuery(newVal, "page");
+      }
       this.scrollToTop();
       this.search();
+    },
+    searchName(newVal) {
+      this.writeQuery(newVal, "searchName");
+    },
+    minPrice(newVal) {
+      this.writeQuery(newVal, "minPrice");
+    },
+    maxPrice(newVal) {
+      this.writeQuery(newVal, "maxPrice");
+    },
+    sort(newVal) {
+      if (newVal === this.sortItems[0].value) {
+        this.writeQuery(null, "sort");
+      } else {
+        this.writeQuery(newVal, "sort");
+      }
+    },
+    selectedCategories(newVal) {
+      if (newVal.length === 0) {
+        this.writeQuery(null, "selectedCategories");
+      } else {
+        this.writeQuery(newVal.join(","), "selectedCategories");
+      }
     },
   },
   components: {

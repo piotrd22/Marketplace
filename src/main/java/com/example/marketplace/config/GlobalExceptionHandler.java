@@ -43,6 +43,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-
     private record CustomError(int statusCode, HttpStatus status, String message, LocalDateTime timestamp) { }
 }

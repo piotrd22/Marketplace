@@ -21,7 +21,6 @@ public class CategoryController extends AbstractControllerBase {
     private final CategoryService categoryService;
     private final CategoryMapper categoryMapper;
 
-
     public CategoryController(CategoryService categoryService, CategoryMapper categoryMapper) {
         this.categoryService = categoryService;
         this.categoryMapper = categoryMapper;
