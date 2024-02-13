@@ -309,13 +309,16 @@ export default {
         this.writeQuery(newVal, "sort");
       }
     },
-    selectedCategories(newVal) {
-      if (newVal.length === 0) {
-        this.writeQuery(null, "selectedCategories");
-      } else {
-        this.writeQuery(newVal.join(","), "selectedCategories");
-      }
-    },
+    // selectedCategories: {
+    //   deep: true,
+    //   handle(newVal) {
+    //     if (newVal.length === 0) {
+    //       this.writeQuery(null, "selectedCategories");
+    //     } else {
+    //       this.writeQuery(newVal.join(","), "selectedCategories");
+    //     }
+    //   },
+    // },
   },
   components: {
     Product,
