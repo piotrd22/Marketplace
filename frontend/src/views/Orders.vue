@@ -13,7 +13,31 @@
     :loading="loading"
     @update:options="loadItems"
     @click:row="navigateToOrder"
-  ></v-data-table-server>
+  >
+    <template v-slot:item.orderStatus="{ item }">
+      <div class="text-end">
+        <v-chip
+          :color="orderStatusChipColor(item.orderStatus)"
+          :text="item.orderStatus"
+          class="text-uppercase"
+          label
+          size="small"
+        ></v-chip>
+      </div>
+    </template>
+
+    <template v-slot:item.payment.paymentMethod="{ item }">
+      <div class="text-end">
+        <v-chip
+          :color="paymentMethodChipColor(item.payment.paymentMethod)"
+          :text="item.payment.paymentMethod"
+          class="text-uppercase"
+          label
+          size="small"
+        ></v-chip>
+      </div>
+    </template>
+  </v-data-table-server>
 </template>
 
 <script>
@@ -81,6 +105,26 @@ export default {
         name: "OrderInfo",
         params: row.item,
       });
+    },
+    orderStatusChipColor(orderStatus) {
+      switch (orderStatus) {
+        case "PAID":
+          return "pink";
+        case "SHIPPED":
+          return "blue";
+        default:
+          return "green";
+      }
+    },
+    paymentMethodChipColor(paymentMethod) {
+      switch (paymentMethod) {
+        case "CARD":
+          return "cyan";
+        case "TRANSFER":
+          return "purple";
+        default:
+          return "orange";
+      }
     },
   },
 };

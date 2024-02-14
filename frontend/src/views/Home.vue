@@ -99,9 +99,18 @@
         </v-col>
       </v-row>
       <v-row v-else>
-        <v-col v-for="product in products" :key="product.id" cols="12" md="4">
+        <v-col
+          v-if="products.length > 0"
+          v-for="product in products"
+          :key="product.id"
+          cols="12"
+          md="4"
+        >
           <product :product="product"></product>
         </v-col>
+
+        <v-col v-else cols="12" md="12" class="text-center"> No results </v-col>
+
         <v-col cols="12" md="12" class="text-center">
           <v-pagination
             v-model="page"
@@ -201,7 +210,17 @@ export default {
 
       return searchParams;
     },
-    handleReset() {
+    async handleReset() {
+      const query = { ...this.$route.query };
+
+      delete query.searchName;
+      delete query.selectedCategories;
+      delete query.minPrice;
+      delete query.maxPrice;
+      delete query.sort;
+
+      await this.$router.replace({ path: this.$route.path, query });
+
       this.searchName = "";
       this.selectedCategories = [];
       this.minPrice = null;
@@ -271,7 +290,7 @@ export default {
       } else {
         query[`${queryName}`] = newVal;
       }
-      this.$router.push({ path: this.$route.path, query });
+      this.$router.replace({ path: this.$route.path, query });
     },
   },
   watch: {
@@ -309,16 +328,13 @@ export default {
         this.writeQuery(newVal, "sort");
       }
     },
-    // selectedCategories: {
-    //   deep: true,
-    //   handle(newVal) {
-    //     if (newVal.length === 0) {
-    //       this.writeQuery(null, "selectedCategories");
-    //     } else {
-    //       this.writeQuery(newVal.join(","), "selectedCategories");
-    //     }
-    //   },
-    // },
+    selectedCategories(newVal) {
+      if (newVal.length === 0) {
+        this.writeQuery(null, "selectedCategories");
+      } else {
+        this.writeQuery(newVal.join(","), "selectedCategories");
+      }
+    },
   },
   components: {
     Product,

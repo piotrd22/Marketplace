@@ -54,14 +54,19 @@
 
             <div
               v-if="product?.categories.length > 0"
-              v-for="category in product?.categories"
-              :key="category.id"
               class="mt-4"
+              style="display: flex; flex-wrap: wrap"
             >
-              <v-chip color="primary" label>
-                <v-icon start icon="mdi-label"></v-icon>
-                {{ category.name }}
-              </v-chip>
+              <div
+                v-for="category in product?.categories"
+                :key="category.id"
+                style="margin-right: 8px"
+              >
+                <v-chip color="primary" label>
+                  <v-icon start icon="mdi-label"></v-icon>
+                  {{ category.name }}
+                </v-chip>
+              </div>
             </div>
           </v-card-text>
 
