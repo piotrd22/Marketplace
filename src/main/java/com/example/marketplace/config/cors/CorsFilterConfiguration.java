@@ -10,10 +10,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+// CORS configuration with classic configuration (if there was Spring Security, we would do it differently)
 @EnableConfigurationProperties(CorsFilterProperties.class)
 @RequiredArgsConstructor
 @Configuration
-// CORS configuration with classic configuration (if there was Spring Security, we would do it differently)
 public class CorsFilterConfiguration {
 
     private final CorsFilterProperties properties;
