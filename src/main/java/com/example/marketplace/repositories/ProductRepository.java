@@ -2,6 +2,7 @@ package com.example.marketplace.repositories;
 
 import com.example.marketplace.dtos.request.product.ProductFilterDto;
 import com.example.marketplace.models.Product;
+import jakarta.annotation.Nonnull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,11 +14,14 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Query("SELECT p FROM Product p WHERE p.id = :id AND p.isDeleted = false")
-    Optional<Product> findById(@Param("id") Long id);
 
+    @Nonnull
+    @Query("SELECT p FROM Product p WHERE p.id = :id AND p.isDeleted = false")
+    Optional<Product> findById(@Nonnull @Param("id") Long id);
+
+    @Nonnull
     @Query("SELECT p FROM Product p WHERE p.isDeleted = false")
-    Page<Product> findAll(Pageable pageable);
+    Page<Product> findAll(@Nonnull Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.isDeleted = false " +
             "AND (:#{#filterDto.getCategoryIds()} IS NULL OR EXISTS (SELECT c FROM p.categories c WHERE c IN :#{#filterDto.getCategoryIds()})) " +

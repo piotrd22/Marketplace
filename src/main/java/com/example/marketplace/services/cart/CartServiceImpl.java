@@ -1,6 +1,5 @@
 package com.example.marketplace.services.cart;
 
-import com.example.marketplace.exceptions.AlreadyExistsException;
 import com.example.marketplace.exceptions.InsufficientQuantityException;
 import com.example.marketplace.exceptions.NotFoundException;
 import com.example.marketplace.models.*;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service

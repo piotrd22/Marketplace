@@ -7,7 +7,6 @@ import com.example.marketplace.exceptions.NotFoundException;
 import com.example.marketplace.models.*;
 import com.example.marketplace.repositories.*;
 import com.example.marketplace.services.cart.CartService;
-import com.example.marketplace.services.product.ProductService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

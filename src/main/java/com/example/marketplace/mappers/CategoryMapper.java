@@ -13,7 +13,6 @@ public abstract class CategoryMapper {
     @Autowired
     private Updater updater;
 
-    public abstract Category categoryDtoToCategory(CategoryDto categoryDto);
     public abstract CategoryDto categoryToCategoryDto(Category category);
     public abstract Category addCategoryDtoToCategory(AddCategoryDto addCategoryDto);
 

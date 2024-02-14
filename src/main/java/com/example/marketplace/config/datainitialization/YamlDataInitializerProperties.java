@@ -12,8 +12,9 @@ import java.util.Map;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "data")
+@ConfigurationProperties(prefix = YamlDataInitializerProperties.PREFIX)
 @PropertySource(value = "classpath:datainitializer.yml", factory = YamlPropertySourceFactory.class)
 public class YamlDataInitializerProperties {
+    public static final String PREFIX = "data";
     private Map<String, List<Map<String, String>>> categories;
 }
