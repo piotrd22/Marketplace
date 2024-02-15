@@ -5,7 +5,7 @@
     </v-btn>
     <v-toolbar-title>
       <v-btn @click="navigateHome" text>
-        <span class="portal-text">eCommerce</span>
+        <span class="portal-text">e-commerce</span>
       </v-btn>
     </v-toolbar-title>
 

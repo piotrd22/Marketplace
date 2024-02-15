@@ -68,7 +68,7 @@
         <v-btn
           variant="tonal"
           type="submit"
-          color="purple"
+          color="secondary"
           append-icon="mdi-magnify"
           class="ml-3"
           >Search</v-btn
