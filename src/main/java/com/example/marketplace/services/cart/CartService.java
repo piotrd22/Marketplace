@@ -13,4 +13,5 @@ public interface CartService {
     Cart saveAddressToCart(Long userId, Address address);
     Cart savePaymentToCart(Long userId, Payment payment);
     void deleteCart(Long userId);
+    int getCartProductLengthByUserId(Long userId);
 }

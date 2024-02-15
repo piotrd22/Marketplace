@@ -46,6 +46,14 @@ public class CartController extends AbstractControllerBase {
         return ResponseEntity.ok().body(cartMapper.cartToCartDto(cart));
     }
 
+    @GetMapping("/length")
+    public ResponseEntity<Integer> getCartProductLengthByUserId() {
+        logger.info("Inside: CartController -> getCartProductLengthByUserId()...");
+        Long userId = getUserId();
+        Integer cartLength = cartService.getCartProductLengthByUserId(userId);
+        return ResponseEntity.ok().body(cartLength);
+    }
+
     @PostMapping("/cart-product")
     public ResponseEntity<CartDto> addProductToCart(@RequestBody @Valid AddProductToCartDto dto) {
         logger.info("Inside: CartController -> addProductToCart()...");
