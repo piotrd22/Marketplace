@@ -7,21 +7,32 @@
     </v-row>
 
     <v-row v-else-if="order">
-      <v-col cols="12" mdi="12">
+      <v-col cols="12" md="12">
         <h1>
           <v-icon>mdi-bookmark-check-outline</v-icon>
           Order Info
         </h1>
       </v-col>
-      <v-col cols="12" mdi="12">
-        <h3>
-          <v-icon>mdi-cart-outline</v-icon> Total price
-          {{ order?.orderPrice.toFixed(2) }}$
-        </h3>
-        <h3>
-          <v-icon>mdi-check-all</v-icon> Order status
-          {{ order?.orderStatus }}
-        </h3>
+      <v-col cols="12" md="12">
+        <v-chip
+          class="ma-2"
+          color="primary"
+          prepend-icon="mdi-cart-outline"
+          label
+        >
+          Total price {{ order?.orderPrice.toFixed(2) }}$
+        </v-chip>
+        <v-chip
+          class="ma-2"
+          color="secondary"
+          prepend-icon="mdi-check-all"
+          label
+        >
+          Order status {{ order?.orderStatus }}
+        </v-chip>
+        <v-chip class="ma-2" color="purple" prepend-icon="mdi-identifier" label>
+          Order number {{ order?.id }}
+        </v-chip>
       </v-col>
       <v-col
         v-for="product in order?.orderProducts"

@@ -118,6 +118,7 @@
 <script>
 import cartService from "../services/cartService";
 import productService from "../services/productService";
+import { useCartStore } from "../store";
 
 export default {
   props: {
@@ -131,6 +132,7 @@ export default {
       product: null,
       isLoading: false,
       quantity: 1,
+      cartStore: useCartStore(),
     };
   },
   async mounted() {
@@ -158,7 +160,7 @@ export default {
         };
 
         const res = await cartService.addProductToCart(body);
-        console.log(res);
+        this.cartStore.setCartSize(res?.data?.cartProducts?.length);
         this.quantity = 1;
         this.$toast.success("Successfully added product to cart!");
       } catch (error) {

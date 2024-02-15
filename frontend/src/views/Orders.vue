@@ -103,7 +103,7 @@ export default {
     navigateToOrder(_, row) {
       this.$router.push({
         name: "OrderInfo",
-        params: row.item,
+        params: { id: row.item.id },
       });
     },
     orderStatusChipColor(orderStatus) {

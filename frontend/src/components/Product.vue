@@ -84,6 +84,7 @@
 
 <script>
 import cartService from "../services/cartService";
+import { useCartStore } from "../store";
 
 export default {
   props: {
@@ -95,6 +96,7 @@ export default {
   data() {
     return {
       quantity: 1,
+      cartStore: useCartStore(),
     };
   },
   methods: {
@@ -106,7 +108,7 @@ export default {
         };
 
         const res = await cartService.addProductToCart(body);
-        console.log(res);
+        this.cartStore.setCartSize(res?.data?.cartProducts?.length);
         this.quantity = 1;
         this.$toast.success("Successfully added product to cart!");
       } catch (error) {
@@ -118,7 +120,10 @@ export default {
       this.quantity = 1;
     },
     navigateToProductInfo() {
-      this.$router.push({ name: "ProductInfo", params: this.product });
+      this.$router.push({
+        name: "ProductInfo",
+        params: { id: this.product.id },
+      });
     },
   },
 };

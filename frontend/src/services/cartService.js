@@ -24,4 +24,7 @@ export default {
     const uri = `/cart/cart-product/${id}`;
     return httpClient.put(uri, { newQuantity });
   },
+  getCartProductLengthByUserId() {
+    return httpClient.get("/cart/length");
+  },
 };

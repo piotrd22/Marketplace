@@ -66,13 +66,15 @@
         </v-col>
 
         <v-btn
+          variant="tonal"
           type="submit"
-          color="secondary"
+          color="purple"
           append-icon="mdi-magnify"
-          class="ml-2"
+          class="ml-3"
           >Search</v-btn
         >
         <v-btn
+          variant="tonal"
           @click="handleReset"
           color="warning"
           append-icon="mdi-close"
@@ -83,7 +85,15 @@
     </v-form>
 
     <div class="my-12">
-      <v-row justify="end">
+      <v-row justify="space-between">
+        <v-col cols="12" md="4">
+          <v-pagination
+            v-if="products.length > 0"
+            v-model="page"
+            :length="totalPages"
+            :total-visible="3"
+          ></v-pagination>
+        </v-col>
         <v-col cols="12" md="2">
           <v-select
             v-model="size"
@@ -226,6 +236,8 @@ export default {
       this.minPrice = null;
       this.maxPrice = null;
       this.sort = this.sortItems[0].value;
+
+      await this.search();
     },
     scrollToTop() {
       window.scrollTo({ top: 0, behavior: "auto" });

@@ -151,10 +151,29 @@
               @click="placeOrder"
               color="secondary"
               append-icon="mdi-cart-arrow-down"
-              :disabled="!cart?.address || !cart?.payment"
+              :loading="loadingDialog"
+              :disabled="!cart?.address || !cart?.payment || loadingDialog"
             >
               Place Order
             </v-btn>
+
+            <v-dialog
+              v-model="loadingDialog"
+              :scrim="false"
+              persistent
+              width="auto"
+            >
+              <v-card color="secondary">
+                <v-card-text>
+                  Order processing. Please stand by.
+                  <v-progress-linear
+                    indeterminate
+                    color="white"
+                    class="mb-0"
+                  ></v-progress-linear>
+                </v-card-text>
+              </v-card>
+            </v-dialog>
           </v-col>
         </v-row>
       </template>
@@ -168,6 +187,7 @@ import cartService from "../services/cartService";
 import CartOrderProduct from "../components/CartOrderProduct.vue";
 import AddAddressToCartForm from "../components/cart/AddAddressToCartForm.vue";
 import AddPaymentToCartForm from "../components/cart/AddPaymentToCartForm.vue";
+import { useCartStore } from "../store";
 
 export default {
   data() {
@@ -177,6 +197,8 @@ export default {
       cart: null,
       stepItems: ["Cart", "Address", "Payment Method", "Submit"],
       loading: false,
+      loadingDialog: false,
+      cartStore: useCartStore(),
     };
   },
   async mounted() {
@@ -207,6 +229,7 @@ export default {
     async deleteCart() {
       try {
         await cartService.deleteCart();
+        this.cartStore.setCartSize(0);
         this.$toast.success("Succesfully deleted cart.");
         this.$router.push({ name: "Home" });
       } catch (error) {
@@ -218,9 +241,14 @@ export default {
     },
     async placeOrder() {
       try {
-        const res = await orderService.placeOrder();
-        this.$toast.success("Succesfully placed order.");
-        this.$router.push({ name: "OrderInfo", params: res?.data });
+        this.loadingDialog = true;
+        setTimeout(async () => {
+          const res = await orderService.placeOrder();
+          this.loadingDialog = false;
+          this.cartStore.setCartSize(0);
+          this.$toast.success("Succesfully placed order.");
+          this.$router.push({ name: "OrderInfo", params: res?.data });
+        }, 4000);
       } catch (error) {
         console.error("placeOrder() Cart.vue: ", error);
         const errorMessage =

@@ -9,7 +9,15 @@
       </v-btn>
     </v-toolbar-title>
 
-    <v-btn @click="navigateCart" prepend-icon="mdi-cart-outline"> Cart </v-btn>
+    <v-btn @click="navigateCart" prepend-icon="mdi-cart-outline">
+      Cart
+      <v-badge
+        v-if="cartStore.cartSize > 0"
+        :content="cartStore.cartSize"
+        color="primary"
+        inline
+      ></v-badge>
+    </v-btn>
 
     <v-menu>
       <template v-slot:activator="{ props }">
@@ -40,6 +48,9 @@
 </template>
 
 <script>
+import cartService from "../../services/cartService";
+import { useCartStore } from "../../store";
+
 export default {
   data() {
     return {
@@ -47,12 +58,17 @@ export default {
         { title: "My Profile", route: "Profile" },
         { title: "My Orders", route: "Orders" },
       ],
+      cartStore: useCartStore(),
     };
   },
   computed: {
     isGoBackPage() {
       return this.$route.name !== "Home";
     },
+  },
+  mounted() {
+    // Normally I would request it after logging in, but we don't have a login
+    this.getCartSize();
   },
   methods: {
     goBack() {
@@ -66,6 +82,18 @@ export default {
     },
     navigate(routeName) {
       this.$router.push({ name: routeName });
+    },
+    async getCartSize() {
+      try {
+        const res = await cartService.getCartProductLengthByUserId();
+        this.cartStore.setCartSize(res.data);
+      } catch (error) {
+        if (error?.response?.data?.statusCode === 404) {
+          this.cartStore.setCartSize(0);
+        } else {
+          console.error(error);
+        }
+      }
     },
   },
 };

@@ -1,7 +1,10 @@
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import "./styles.css";
 import App from "./App.vue";
-
+import router from "./router";
+import ToastPlugin from "vue-toast-notification";
+import "vue-toast-notification/dist/theme-bootstrap.css";
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import * as components from "vuetify/components";
@@ -13,9 +16,10 @@ const vuetify = createVuetify({
   directives,
 });
 
-import ToastPlugin from "vue-toast-notification";
-import "vue-toast-notification/dist/theme-bootstrap.css";
-
-import router from "./router";
-
-createApp(App).use(vuetify).use(ToastPlugin).use(router).mount("#app");
+const pinia = createPinia();
+createApp(App)
+  .use(pinia)
+  .use(vuetify)
+  .use(ToastPlugin)
+  .use(router)
+  .mount("#app");

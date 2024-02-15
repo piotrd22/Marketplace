@@ -78,6 +78,7 @@
 
 <script>
 import cartService from "../services/cartService";
+import { useCartStore } from "../store";
 
 export default {
   props: {
@@ -88,13 +89,14 @@ export default {
     updateCartFromResponse: Function,
     isSummary: Boolean,
   },
-  mounted() {
-    this.quantity = this.product.quantity;
-  },
   data() {
     return {
       quantity: 1,
+      cartStore: useCartStore(),
     };
+  },
+  mounted() {
+    this.quantity = this.product.quantity;
   },
   methods: {
     async updateProductQuantityInCart() {
@@ -118,6 +120,7 @@ export default {
     async removeProductFromCart() {
       try {
         const res = await cartService.removeProductFromCart(this.product.id);
+        this.cartStore.setCartSize(res?.data?.cartProducts?.length);
         this.updateCartFromResponse(res?.data);
         this.$toast.success("Successfully deleted product from cart.");
       } catch (error) {
