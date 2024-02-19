@@ -82,7 +82,6 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException("Payment failed. Try again.");
         }
 
-
         Payment payment = cart.getPayment();
         payment.setPaymentDate(LocalDateTime.now());
         return paymentRepository.save(payment);

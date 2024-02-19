@@ -172,8 +172,7 @@ public class CartServiceImpl implements CartService {
     private Cart addExistingCartProductToCart(Cart cart, CartProduct existingCartProduct, CartProduct cartProduct, Product product) {
         int newQuantity = existingCartProduct.getQuantity() + cartProduct.getQuantity();
 
-        // If so, I check whether we have enough Product in stock
-        // If so, I save the entities, if not, I throw an error
+        // I check whether there are the right number of products in stock, if so, I update it, if not, I throw an error
         // Additionally, I check whether the price has not changed, and if so, I change it
         if (newQuantity > product.getQuantity()) {
             throw new InsufficientQuantityException();
