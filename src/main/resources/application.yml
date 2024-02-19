@@ -22,6 +22,10 @@ web:
       allowed-headers: Origin,Content-Type,Accept
       allowed-methods: GET,POST,PUT,PATCH,DELETE,ORIGIN
       allowed-origins: "http://localhost:5173"
+  security:
+#   this shouldn't be visible :)
+    jwtSecret: asecretthatshouldntberevealed
+    jwtExpirationMs: 86400000
 
 springdoc:
   api-docs:

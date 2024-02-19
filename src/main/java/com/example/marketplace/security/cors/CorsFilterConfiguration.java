@@ -1,4 +1,4 @@
-package com.example.marketplace.config.cors;
+package com.example.marketplace.security.cors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -10,7 +10,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-// CORS configuration with classic configuration (if there was Spring Security, we would do it differently)
 @EnableConfigurationProperties(CorsFilterProperties.class)
 @RequiredArgsConstructor
 @Configuration

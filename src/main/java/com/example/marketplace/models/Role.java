@@ -1,5 +1,6 @@
 package com.example.marketplace.models;
 
+import com.example.marketplace.enums.RoleName;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -7,26 +8,19 @@ import org.hibernate.proxy.HibernateProxy;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-// https://stackoverflow.com/questions/75181366/why-jpa-buddy-complains-about-data-annotation-over-jpa-entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Address {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String address;
-    private String city;
-    private String state;
-    private String zipCode;
-    private String country;
-
-    // MockOnly
-    @Column(nullable = false)
-    private Long userId;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 40)
+    public RoleName name;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -48,8 +42,8 @@ public class Address {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Address address = (Address) o;
-        return getId() != null && Objects.equals(getId(), address.getId());
+        Role role = (Role) o;
+        return getId() != null && Objects.equals(getId(), role.getId());
     }
 
     @Override

@@ -5,28 +5,32 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-// https://stackoverflow.com/questions/75181366/why-jpa-buddy-complains-about-data-annotation-over-jpa-entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Address {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String address;
-    private String city;
-    private String state;
-    private String zipCode;
-    private String country;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-    // MockOnly
+    @Column(nullable = false, unique = true)
+    private String username;
+
     @Column(nullable = false)
-    private Long userId;
+    private String password;
+
+    @ManyToMany
+    @ToString.Exclude
+    private Set<Role> roles = new HashSet<>();
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -48,8 +52,8 @@ public class Address {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Address address = (Address) o;
-        return getId() != null && Objects.equals(getId(), address.getId());
+        User user = (User) o;
+        return getId() != null && Objects.equals(getId(), user.getId());
     }
 
     @Override
