@@ -38,7 +38,57 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public Order placeOrder(Long userId) {
         Cart cart = cartService.getCartByUserId(userId);
+        validateCartForPlacingOrder(cart);
 
+        // https://stackoverflow.com/questions/46211847/call-transactional-annotated-method-from-another-transactional-annotated-metho
+        Payment payment = payForOrder(cart);
+        List<OrderProduct> orderProducts = processCartProducts(cart);
+
+        Order newOrder = Order.builder()
+                .orderPrice(cart.getCartPrice())
+                .orderProducts(orderProducts)
+                .orderStatus(OrderStatus.PAID)
+                .payment(payment)
+                .userId(cart.getUserId())
+                .address(cart.getAddress())
+                .build();
+
+        cartService.deleteCart(userId);
+        return orderRepository.save(newOrder);
+    }
+
+    @Override
+    public Order getOrder(Long id) {
+        return orderRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Order"));
+    }
+
+    @Override
+    public List<Order> getOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable).getContent();
+    }
+
+    @Override
+    public Page<Order> getOrdersByUserId(Long userId, Pageable pageable) {
+        return orderRepository.findByUserId(userId, pageable);
+    }
+
+    private Payment payForOrder(Cart cart) {
+        // Mock -- 9 out of 10 cases will be paid
+        Random random = new Random();
+        int randomNumber = random.nextInt(10);
+        boolean isPaid = randomNumber < 9;
+
+        if (!isPaid) {
+            throw new BadRequestException("Payment failed. Try again.");
+        }
+
+
+        Payment payment = cart.getPayment();
+        payment.setPaymentDate(LocalDateTime.now());
+        return paymentRepository.save(payment);
+    }
+
+    private void validateCartForPlacingOrder(Cart cart) {
         // There should be better validation here, but it's enough for a project like this
         if (cart.getPayment() == null) {
             throw new BadRequestException("Cart is not ready for placing order. Payment is not set.");
@@ -49,7 +99,9 @@ public class OrderServiceImpl implements OrderService {
         if (cart.getCartProducts().isEmpty()) {
             throw new BadRequestException("Cart is not ready for placing order. Cart is empty.");
         }
+    }
 
+    private List<OrderProduct> processCartProducts(Cart cart) {
         List<OrderProduct> orderProducts = new ArrayList<>();
         List<Product> updatedProducts = new ArrayList<>();
 
@@ -73,53 +125,7 @@ public class OrderServiceImpl implements OrderService {
             orderProducts.add(orderProduct);
         }
 
-        boolean isPaid = payForOrder();
-        LocalDateTime payTime = LocalDateTime.now();
-        if (!isPaid) {
-            throw new BadRequestException("Payment failed. Try again.");
-        }
-
         productRepository.saveAll(updatedProducts);
-        orderProducts = orderProductRepository.saveAll(orderProducts);
-
-        Order newOrder = Order.builder()
-                .orderPrice(cart.getCartPrice())
-                .orderProducts(orderProducts)
-                .orderStatus(OrderStatus.PAID)
-                .payment(cart.getPayment())
-                .userId(cart.getUserId())
-                .address(cart.getAddress())
-                .build();
-
-        Payment payment = newOrder.getPayment();
-        payment.setPaymentDate(payTime);
-        payment = paymentRepository.save(payment);
-        newOrder.setPayment(payment);
-
-        newOrder = orderRepository.save(newOrder);
-        cartService.deleteCart(userId);
-        return newOrder;
-    }
-
-    @Override
-    public Order getOrder(Long id) {
-        return orderRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "Order"));
-    }
-
-    @Override
-    public List<Order> getOrders(Pageable pageable) {
-        return orderRepository.findAll(pageable).getContent();
-    }
-
-    @Override
-    public Page<Order> getOrdersByUserId(Long userId, Pageable pageable) {
-        return orderRepository.findByUserId(userId, pageable);
-    }
-
-    // Mock -- 9 out of 10 cases will be paid
-    private boolean payForOrder() {
-        Random random = new Random();
-        int randomNumber = random.nextInt(10);
-        return randomNumber < 9;
+        return orderProductRepository.saveAll(orderProducts);
     }
 }

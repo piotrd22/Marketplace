@@ -43,66 +43,10 @@ public class CartServiceImpl implements CartService {
         Product product = cartProduct.getProduct();
         Optional<Cart> oldCart = cartRepository.findByUserId(userId);
 
-        Cart cart;
-        // I check whether the cart exists
-        if (oldCart.isPresent()) {
-            cart = oldCart.get();
-
-            // I check whether there is already an Order Product with this Product
-            CartProduct existingCartProduct = cart.getCartProducts().stream()
-                    .filter(op -> op.getProduct().getId().equals(cartProduct.getProduct().getId()))
-                    .findFirst().orElse(null);
-
-            if (existingCartProduct != null) {
-                int newQuantity = existingCartProduct.getQuantity() + cartProduct.getQuantity();
-
-                // If so, I check whether we have enough Product in stock
-                // If so, I save the entities, if not, I throw an error
-                // Additionally, I check whether the price has not changed, and if so, I change it
-                if (newQuantity > product.getQuantity()) {
-                    throw new InsufficientQuantityException();
-                } else {
-                    double newCartPrice = cart.getCartPrice() - (existingCartProduct.getProductPrice() * existingCartProduct.getQuantity()) + (product.getPrice() * newQuantity);
-                    cart.setCartPrice(newCartPrice);
-                    existingCartProduct.setProductPrice(product.getPrice());
-                    existingCartProduct.setQuantity(newQuantity);
-                    cartProductRepository.save(existingCartProduct);
-                }
-            } else {
-                // If there is no Cart Product with such a Product in the order, I check the quantity in stock
-                // If so, I save the entity, if not, I throw an error
-                if (cartProduct.getQuantity() > product.getQuantity()) {
-                    throw new InsufficientQuantityException();
-                } else {
-                    cartProduct.setProduct(product);
-                    cartProduct.setProductPrice(product.getPrice());
-                    CartProduct newCartProduct = cartProductRepository.save(cartProduct);
-                    double newCartPrice = cart.getCartPrice() + newCartProduct.getProductPrice() * newCartProduct.getQuantity();
-                    cart.setCartPrice(newCartPrice);
-                    cart.getCartProducts().add(newCartProduct);
-                }
-            }
-
-            cart = cartRepository.save(cart);
-        } else {
-            // If the shopping cart does not exist, I check whether we have enough products in stock
-            // If we have this much in stock, save the entities, if not, I throw an error
-            if (cartProduct.getQuantity() > product.getQuantity()) {
-                throw new InsufficientQuantityException();
-            } else {
-                cart = new Cart();
-                cart.setUserId(userId);
-                cart = cartRepository.save(cart);
-                cartProduct.setProduct(product);
-                cartProduct.setProductPrice(product.getPrice());
-                CartProduct newCartProduct = cartProductRepository.save(cartProduct);
-                cart.setCartProducts(new ArrayList<>(List.of(newCartProduct)));
-                cart.setCartPrice(newCartProduct.getProductPrice() * newCartProduct.getQuantity());
-                cart = cartRepository.save(cart);
-            }
-        }
-
-        return cart;
+        // I check whether the cart exists, if so it calls addProductToExistingCart, if not it calls addProductToNewCart
+        return oldCart
+                .map((value) -> addProductToExistingCart(value, cartProduct, product))
+                .orElseGet(() -> addProductToNewCart(cartProduct, product, userId));
     }
 
     @Override
@@ -212,5 +156,74 @@ public class CartServiceImpl implements CartService {
 
     private CartProduct getCartProduct(Long id) {
         return cartProductRepository.findById(id).orElseThrow(() -> new NotFoundException(id, "CartProduct"));
+    }
+
+    private Cart addProductToExistingCart(Cart cart, CartProduct cartProduct, Product product) {
+        // I check whether there is already a Cart Product with this Product
+        CartProduct existingCartProduct = findExistingCartProductInCart(cart, cartProduct);
+
+        if (existingCartProduct == null) {
+            return addNewCartProductToCart(cart, cartProduct, product);
+        }
+
+        return addExistingCartProductToCart(cart, existingCartProduct, cartProduct, product);
+    }
+
+    private Cart addExistingCartProductToCart(Cart cart, CartProduct existingCartProduct, CartProduct cartProduct, Product product) {
+        int newQuantity = existingCartProduct.getQuantity() + cartProduct.getQuantity();
+
+        // If so, I check whether we have enough Product in stock
+        // If so, I save the entities, if not, I throw an error
+        // Additionally, I check whether the price has not changed, and if so, I change it
+        if (newQuantity > product.getQuantity()) {
+            throw new InsufficientQuantityException();
+        }
+
+        double newCartPrice = cart.getCartPrice() - (existingCartProduct.getProductPrice() * existingCartProduct.getQuantity()) + (product.getPrice() * newQuantity);
+        cart.setCartPrice(newCartPrice);
+        existingCartProduct.setProductPrice(product.getPrice());
+        existingCartProduct.setQuantity(newQuantity);
+        cartProductRepository.save(existingCartProduct);
+        return cartRepository.save(cart);
+    }
+
+    private Cart addNewCartProductToCart(Cart cart, CartProduct cartProduct, Product product) {
+        // If there is no Cart Product with such a Product in the order, I check the quantity in stock
+        // If so, I save the entity, if not, I throw an error
+        if (cartProduct.getQuantity() > product.getQuantity()) {
+            throw new InsufficientQuantityException();
+        }
+
+        cartProduct.setProduct(product);
+        cartProduct.setProductPrice(product.getPrice());
+        CartProduct newCartProduct = cartProductRepository.save(cartProduct);
+        double newCartPrice = cart.getCartPrice() + newCartProduct.getProductPrice() * newCartProduct.getQuantity();
+        cart.setCartPrice(newCartPrice);
+        cart.getCartProducts().add(newCartProduct);
+        return cartRepository.save(cart);
+    }
+
+    private CartProduct findExistingCartProductInCart(Cart cart, CartProduct cartProduct) {
+        return cart.getCartProducts().stream()
+                .filter(op -> op.getProduct().getId().equals(cartProduct.getProduct().getId()))
+                .findFirst().orElse(null);
+    }
+
+    private Cart addProductToNewCart(CartProduct cartProduct, Product product, Long userId) {
+        // If the shopping cart does not exist, I check whether we have enough products in stock
+        // If we have this much in stock, save the entities, if not, I throw an error
+        if (cartProduct.getQuantity() > product.getQuantity()) {
+            throw new InsufficientQuantityException();
+        }
+
+        Cart cart = new Cart();
+        cart.setUserId(userId);
+        cart = cartRepository.save(cart);
+        cartProduct.setProduct(product);
+        cartProduct.setProductPrice(product.getPrice());
+        CartProduct newCartProduct = cartProductRepository.save(cartProduct);
+        cart.setCartProducts(new ArrayList<>(List.of(newCartProduct)));
+        cart.setCartPrice(newCartProduct.getProductPrice() * newCartProduct.getQuantity());
+        return cartRepository.save(cart);
     }
 }

@@ -14,6 +14,7 @@ public abstract class CategoryMapper {
     private Updater updater;
 
     public abstract CategoryDto categoryToCategoryDto(Category category);
+
     public abstract Category addCategoryDtoToCategory(AddCategoryDto addCategoryDto);
 
     public void updateCategory(Category category, UpdateCategoryDto updateCategoryDto) {

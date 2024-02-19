@@ -4,7 +4,6 @@ import com.example.marketplace.dtos.request.product.ProductFilterDto;
 import com.example.marketplace.exceptions.NotFoundException;
 import com.example.marketplace.models.Product;
 import com.example.marketplace.repositories.ProductRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public void deleteProduct(Long id) {
         Product product = getProduct(id);
         product.setQuantity(0);
