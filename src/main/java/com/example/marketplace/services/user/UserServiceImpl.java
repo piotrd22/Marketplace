@@ -2,6 +2,7 @@ package com.example.marketplace.services.user;
 
 import com.example.marketplace.enums.RoleName;
 import com.example.marketplace.exceptions.AlreadyExistsException;
+import com.example.marketplace.exceptions.NotFoundException;
 import com.example.marketplace.models.Role;
 import com.example.marketplace.models.User;
 import com.example.marketplace.repositories.UserRepository;
@@ -36,5 +37,11 @@ public class UserServiceImpl implements UserService {
         Role userRole = roleService.getRoleByName(RoleName.ROLE_USER);
         user.getRoles().add(userRole);
         return userRepository.save(user);
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User with username '%s' not found. ".formatted(username)));
     }
 }

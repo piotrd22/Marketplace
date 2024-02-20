@@ -4,6 +4,7 @@ server:
 
 spring:
   datasource:
+#   this shouldn't be visible :)
     url: jdbc:postgresql://localhost:5432/marketplace
     username: postgres
     password: password
@@ -32,3 +33,9 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui
+
+initializer:
+  user:
+    username: piotrd
+    email: piotr.damrych@icloud.com
+    password: password

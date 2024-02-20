@@ -31,11 +31,11 @@ public class User {
     @Size(min = 3, max = 40)
     private String username;
 
+    // I don't add size because the size changes a lot anyway due to the password encryption
     @Column(nullable = false)
-    @Size(min = 6, max = 50)
     private String password;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Role> roles = new HashSet<>();
 

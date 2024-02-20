@@ -1,13 +1,11 @@
 package com.example.marketplace.dtos.response;
 
-import com.example.marketplace.enums.RoleName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor

@@ -1,5 +1,6 @@
 package com.example.marketplace.controllers;
 
+import com.example.marketplace.models.User;
 import com.example.marketplace.security.services.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -26,7 +27,8 @@ public abstract class AbstractControllerBase {
         return 1L;
     }
 
-    protected UserDetailsImpl getUserDetails() {
-        return (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    protected User getUser() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUser();
     }
 }

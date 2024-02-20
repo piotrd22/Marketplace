@@ -6,20 +6,22 @@ import com.example.marketplace.services.cart.CartService;
 import com.example.marketplace.services.category.CategoryService;
 import com.example.marketplace.services.order.OrderService;
 import com.example.marketplace.services.product.ProductService;
+import com.example.marketplace.services.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 
 import java.net.URL;
 import java.util.*;
 
 @Configuration
-public class DataInitializer implements CommandLineRunner {
+public class DataInitializer implements CommandLineRunner, Ordered {
 
     private final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
     private final Random random = new Random();
-    private final static long USER_ID = 1L;
     private final static int ORDER_NUMBER = 20;
     private final static int CART_PRODUCTS_NUMBER = 4;
     private final YamlDataInitializerProperties yamlDataInitializerProperties;
@@ -27,17 +29,24 @@ public class DataInitializer implements CommandLineRunner {
     private final ProductService productService;
     private final CartService cartService;
     private final OrderService orderService;
+    private final UserService userService;
+    private User user;
 
-    public DataInitializer(YamlDataInitializerProperties yamlDataInitializerProperties, CategoryService categoryService, ProductService productService, CartService cartService, OrderService orderService) {
+    @Value("${initializer.user.username}")
+    private String username;
+
+    public DataInitializer(YamlDataInitializerProperties yamlDataInitializerProperties, CategoryService categoryService, ProductService productService, CartService cartService, OrderService orderService, UserService userService) {
         this.yamlDataInitializerProperties = yamlDataInitializerProperties;
         this.categoryService = categoryService;
         this.productService = productService;
         this.cartService = cartService;
         this.orderService = orderService;
+        this.userService = userService;
     }
 
     @Override
     public void run(String... args) throws Exception {
+        user = userService.getUserByUsername(username);
         var categories = yamlDataInitializerProperties.getCategories();
 
         for (String categoryName : categories.keySet()) {
@@ -72,7 +81,7 @@ public class DataInitializer implements CommandLineRunner {
                 cartProduct.setProduct(product);
 
                 try {
-                    cartService.addProductToCart(cartProduct, USER_ID);
+                    cartService.addProductToCart(cartProduct, user.getId());
                 } catch (RuntimeException e) {
                     logger.error("DataInitializer Error " + e.getMessage());
                 }
@@ -80,12 +89,12 @@ public class DataInitializer implements CommandLineRunner {
 
             try {
                 Address address = generateAddress();
-                cartService.saveAddressToCart(USER_ID, address);
+                cartService.saveAddressToCart(user.getId(), address);
 
                 Payment payment = generatePayment();
-                cartService.savePaymentToCart(USER_ID, payment);
+                cartService.savePaymentToCart(user.getId(), payment);
 
-                orderService.placeOrder(USER_ID);
+                orderService.placeOrder(user.getId());
             } catch (RuntimeException e) {
                 logger.error("DataInitializer Error " + e.getMessage());
             }
@@ -107,7 +116,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private Address generateAddress() {
         Address address = new Address();
-        address.setUserId(USER_ID);
+        address.setUserId(user.getId());
         address.setAddress("ul. Jana 8");
         address.setCity("Gdansk");
         address.setCountry("Poland");
@@ -119,7 +128,12 @@ public class DataInitializer implements CommandLineRunner {
     private Payment generatePayment() {
         Payment payment = new Payment();
         payment.setPaymentMethod(PaymentMethod.CARD);
-        payment.setUserId(USER_ID);
+        payment.setUserId(user.getId());
         return payment;
+    }
+
+    @Override
+    public int getOrder() {
+        return 3;
     }
 }

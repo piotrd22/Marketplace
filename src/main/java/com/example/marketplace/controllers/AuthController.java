@@ -47,11 +47,11 @@ public class AuthController extends AbstractControllerBase {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-        UserDetailsImpl userDetails = getUserDetails();
+        User user = getUser();
         AuthDto auth = new AuthDto();
         auth.setToken(jwt);
-        UserDto user = userMapper.toDto(userDetails);
-        auth.setUser(user);
+        UserDto userDto = userMapper.toDto(user);
+        auth.setUser(userDto);
         return ResponseEntity.ok().body(auth);
     }
 

@@ -1,11 +1,13 @@
 package com.example.marketplace.security;
 
+import com.example.marketplace.enums.RoleName;
 import com.example.marketplace.security.jwt.AuthEntryPointJwt;
 import com.example.marketplace.security.jwt.AuthTokenFilter;
 import com.example.marketplace.security.jwt.JwtUtils;
 import com.example.marketplace.security.services.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -26,6 +28,11 @@ public class WebSecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
+
+    // I remove the ROLE_ prefix because Spring adds this prefix itself when checking the role
+    private final static String ROLE_PREFIX = "ROLE_";
+    private final static String USER_ROLE = RoleName.ROLE_USER.name().replace(ROLE_PREFIX, "");
+    private final static String ADMIN_ROLE = RoleName.ROLE_ADMIN.name().replace(ROLE_PREFIX, "");
 
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
         this.userDetailsService = userDetailsService;
@@ -66,6 +73,20 @@ public class WebSecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authenticationJwtTokenFilter(jwtUtils, userDetailsService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(req -> req
+                        // CategoryController
+                        .requestMatchers(HttpMethod.POST, "/api/categories/**").hasAnyRole(ADMIN_ROLE)
+                        .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasAnyRole(ADMIN_ROLE)
+                        .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasAnyRole(ADMIN_ROLE)
+                        // ProductController
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasAnyRole(ADMIN_ROLE)
+                        .requestMatchers(HttpMethod.PUT, "/api/products/**").hasAnyRole(ADMIN_ROLE)
+                        .requestMatchers(HttpMethod.POST, "/api/products").hasAnyRole(ADMIN_ROLE)
+                        // CartController
+                        .requestMatchers("/api/cart/**").hasAnyRole(USER_ROLE)
+                        // OrderController
+                        .requestMatchers(HttpMethod.GET, "/api/orders").hasAnyRole(ADMIN_ROLE)
+                        .requestMatchers("/api/orders/**").hasAnyRole(USER_ROLE)
+                        // All
                         .anyRequest().permitAll()
                 )
                 .build();
