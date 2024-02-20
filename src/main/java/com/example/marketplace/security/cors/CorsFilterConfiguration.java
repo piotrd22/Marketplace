@@ -2,7 +2,6 @@ package com.example.marketplace.security.cors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.CollectionUtils;
@@ -18,11 +17,11 @@ public class CorsFilterConfiguration {
     private final CorsFilterProperties properties;
 
     @Bean("corsFilter")
-    public FilterRegistrationBean<CorsFilter> corsFilter() {
+    public CorsFilter corsFilter() {
         final CorsConfiguration config = buildCorsConfiguration();
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        return new FilterRegistrationBean<>(new CorsFilter(source));
+        return new CorsFilter(source);
     }
 
     private CorsConfiguration buildCorsConfiguration() {

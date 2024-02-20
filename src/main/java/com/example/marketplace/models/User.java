@@ -1,6 +1,8 @@
 package com.example.marketplace.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -14,18 +16,23 @@ import java.util.Set;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @Email
+    @Size(max = 50)
     private String email;
 
     @Column(nullable = false, unique = true)
+    @Size(min = 3, max = 40)
     private String username;
 
     @Column(nullable = false)
+    @Size(min = 6, max = 50)
     private String password;
 
     @ManyToMany

@@ -24,7 +24,7 @@ web:
       allowed-origins: "http://localhost:5173"
   security:
 #   this shouldn't be visible :)
-    jwtSecret: asecretthatshouldntberevealed
+    jwtSecret: ===================================================aSecretThatShouldntBeRevealed===================================================
     jwtExpirationMs: 86400000
 
 springdoc:
