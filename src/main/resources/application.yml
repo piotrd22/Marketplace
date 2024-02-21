@@ -20,7 +20,7 @@ spring:
 web:
   filter:
     cors:
-      allowed-headers: Origin,Content-Type,Accept
+      allowed-headers: Origin,Content-Type,Accept,Authorization
       allowed-methods: GET,POST,PUT,PATCH,DELETE,ORIGIN
       allowed-origins: "http://localhost:5173"
   security:
