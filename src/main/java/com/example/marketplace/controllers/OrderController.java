@@ -42,7 +42,7 @@ public class OrderController extends AbstractControllerBase {
     @GetMapping("/user")
     public ResponseEntity<Page<OrderDto>> getOrdersByUserId(Pageable pageable) {
         logger.info("Inside: OrderController -> getOrdersByUserId()...");
-        Long userId = getUserId();
+        Long userId = getUser().getId();
         Page<Order> orders = orderService.getOrdersByUserId(userId, pageable);
         Page<OrderDto> orderDtos = orders.map(orderMapper::orderToOrderDto);
         return ResponseEntity.ok().body(orderDtos);
@@ -51,7 +51,7 @@ public class OrderController extends AbstractControllerBase {
     @PostMapping
     public ResponseEntity<OrderDto> placeOrder(HttpServletRequest request) {
         logger.info("Inside: OrderController -> placeOrder()...");
-        Long userId = getUserId();
+        Long userId = getUser().getId();
         Order order = orderService.placeOrder(userId);
         URI location = getURILocationFromRequest(order.getId(), request);
         return ResponseEntity.created(location).body(orderMapper.orderToOrderDto(order));

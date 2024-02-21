@@ -1,7 +1,7 @@
 package com.example.marketplace.controllers;
 
 import com.example.marketplace.models.User;
-import com.example.marketplace.security.services.UserDetailsImpl;
+import com.example.marketplace.config.security.services.UserDetailsImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +20,6 @@ public abstract class AbstractControllerBase {
                 .path("/{id}")
                 .buildAndExpand(id)
                 .toUri();
-    }
-
-    // Mock -- Normally I would take the user out of security context
-    protected Long getUserId() {
-        return 1L;
     }
 
     protected User getUser() {

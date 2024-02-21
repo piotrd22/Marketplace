@@ -1,4 +1,4 @@
-package com.example.marketplace.security.services;
+package com.example.marketplace.config.security.services;
 
 import com.example.marketplace.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serial;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -21,23 +20,11 @@ public class UserDetailsImpl implements UserDetails {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @JsonIgnore
-    private String password;
-
-    @Getter
-    private Long id;
-
-    @Getter
-    private String email;
-
-    @Getter
-    private LocalDateTime createdAt;
-
-    @Getter
-    private LocalDateTime updatedAt;
-
     @Getter
     private User user;
+
+    @JsonIgnore
+    private String password;
 
     private String username;
     private Collection<? extends GrantedAuthority> authorities;
@@ -48,12 +35,8 @@ public class UserDetailsImpl implements UserDetails {
                 .collect(Collectors.toList());
 
         return new UserDetailsImpl(
-                user.getPassword(),
-                user.getId(),
-                user.getEmail(),
-                user.getCreatedAt(),
-                user.getUpdatedAt(),
                 user,
+                user.getPassword(),
                 user.getUsername(),
                 authorities
         );
@@ -102,7 +85,7 @@ public class UserDetailsImpl implements UserDetails {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
+        UserDetailsImpl userDetails = (UserDetailsImpl) o;
+        return Objects.equals(user.getId(), userDetails.user.getId());
     }
 }

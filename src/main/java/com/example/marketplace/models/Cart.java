@@ -31,9 +31,8 @@ public class Cart {
 
     private Double cartPrice;
 
-    // MockOnly
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    private User user;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

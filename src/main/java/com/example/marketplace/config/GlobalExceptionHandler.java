@@ -16,32 +16,32 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
-        CustomError error = new CustomError(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND, ex.getMessage(), LocalDateTime.now());
+        CustomError error = new CustomError(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND, ex.getMessage(), request.getContextPath(), LocalDateTime.now());
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler(AlreadyExistsException.class)
     protected ResponseEntity<Object> handleAlreadyExistsException(AlreadyExistsException ex, WebRequest request) {
-        CustomError error = new CustomError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage(), LocalDateTime.now());
+        CustomError error = new CustomError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage(), request.getContextPath(), LocalDateTime.now());
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(EntityInUseException.class)
     protected ResponseEntity<Object> handleEntityInUseException(EntityInUseException ex, WebRequest request) {
-        CustomError error = new CustomError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage(), LocalDateTime.now());
+        CustomError error = new CustomError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage(), request.getContextPath(), LocalDateTime.now());
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(InsufficientQuantityException.class)
     protected ResponseEntity<Object> handleInsufficientQuantityException(InsufficientQuantityException ex, WebRequest request) {
-        CustomError error = new CustomError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage(), LocalDateTime.now());
+        CustomError error = new CustomError(HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT, ex.getMessage(), request.getContextPath(), LocalDateTime.now());
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
     @ExceptionHandler(BadRequestException.class)
     protected ResponseEntity<Object> handleInvalidCartStateException(BadRequestException ex, WebRequest request) {
-        CustomError error = new CustomError(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, ex.getMessage(), LocalDateTime.now());
+        CustomError error = new CustomError(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, ex.getMessage(), request.getContextPath(), LocalDateTime.now());
         return handleExceptionInternal(ex, error, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    private record CustomError(int statusCode, HttpStatus status, String message, LocalDateTime timestamp) { }
+    private record CustomError(int statusCode, HttpStatus status, String message, String path, LocalDateTime timestamp) { }
 }

@@ -21,9 +21,8 @@ public class Payment {
     @Enumerated(EnumType.ORDINAL)
     private PaymentMethod paymentMethod;
 
-    // MockOnly
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    private User user;
 
     private LocalDateTime paymentDate;
 

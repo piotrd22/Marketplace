@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
                 .orderProducts(orderProducts)
                 .orderStatus(OrderStatus.PAID)
                 .payment(payment)
-                .userId(cart.getUserId())
+                .user(cart.getUser())
                 .address(cart.getAddress())
                 .build();
 

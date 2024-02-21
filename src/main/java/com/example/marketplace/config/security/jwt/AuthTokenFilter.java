@@ -1,6 +1,6 @@
-package com.example.marketplace.security.jwt;
+package com.example.marketplace.config.security.jwt;
 
-import com.example.marketplace.security.services.UserDetailsServiceImpl;
+import com.example.marketplace.config.security.services.UserDetailsServiceImpl;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

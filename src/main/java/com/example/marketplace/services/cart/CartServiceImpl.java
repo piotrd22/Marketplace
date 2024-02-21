@@ -39,14 +39,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public Cart addProductToCart(CartProduct cartProduct, Long userId) {
+    public Cart addProductToCart(CartProduct cartProduct, User user) {
         Product product = cartProduct.getProduct();
-        Optional<Cart> oldCart = cartRepository.findByUserId(userId);
+        Optional<Cart> oldCart = cartRepository.findByUserId(user.getId());
 
         // I check whether the cart exists, if so it calls addProductToExistingCart, if not it calls addProductToNewCart
         return oldCart
                 .map((value) -> addProductToExistingCart(value, cartProduct, product))
-                .orElseGet(() -> addProductToNewCart(cartProduct, product, userId));
+                .orElseGet(() -> addProductToNewCart(cartProduct, product, user));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class CartServiceImpl implements CartService {
             return cartRepository.save(cart);
         }
 
-        address.setUserId(userId);
+        address.setUser(cart.getUser());
         address = addressRepository.save(address);
         cart.setAddress(address);
         return cartRepository.save(cart);
@@ -124,7 +124,7 @@ public class CartServiceImpl implements CartService {
             return cartRepository.save(cart);
         }
 
-        payment.setUserId(userId);
+        payment.setUser(cart.getUser());
         payment = paymentRepository.save(payment);
         cart.setPayment(payment);
         return cartRepository.save(cart);
@@ -208,7 +208,7 @@ public class CartServiceImpl implements CartService {
                 .findFirst().orElse(null);
     }
 
-    private Cart addProductToNewCart(CartProduct cartProduct, Product product, Long userId) {
+    private Cart addProductToNewCart(CartProduct cartProduct, Product product, User user) {
         // If the shopping cart does not exist, I check whether we have enough products in stock
         // If we have this much in stock, save the entities, if not, I throw an error
         if (cartProduct.getQuantity() > product.getQuantity()) {
@@ -216,7 +216,7 @@ public class CartServiceImpl implements CartService {
         }
 
         Cart cart = new Cart();
-        cart.setUserId(userId);
+        cart.setUser(user);
         cart = cartRepository.save(cart);
         cartProduct.setProduct(product);
         cartProduct.setProductPrice(product.getPrice());

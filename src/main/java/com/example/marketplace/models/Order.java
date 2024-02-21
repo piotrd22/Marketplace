@@ -37,9 +37,8 @@ public class Order {
 
     private Double orderPrice;
 
-    // MockOnly
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    private User user;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

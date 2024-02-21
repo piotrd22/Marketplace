@@ -24,9 +24,8 @@ public class Address {
     private String zipCode;
     private String country;
 
-    // MockOnly
-    @Column(nullable = false)
-    private Long userId;
+    @ManyToOne
+    private User user;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -1,10 +1,10 @@
-package com.example.marketplace.security;
+package com.example.marketplace.config.security;
 
+import com.example.marketplace.config.security.jwt.JwtUtils;
+import com.example.marketplace.config.security.services.UserDetailsServiceImpl;
 import com.example.marketplace.enums.RoleName;
-import com.example.marketplace.security.jwt.AuthEntryPointJwt;
-import com.example.marketplace.security.jwt.AuthTokenFilter;
-import com.example.marketplace.security.jwt.JwtUtils;
-import com.example.marketplace.security.services.UserDetailsServiceImpl;
+import com.example.marketplace.config.security.jwt.AuthEntryPointJwt;
+import com.example.marketplace.config.security.jwt.AuthTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,13 +26,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class WebSecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsService;
-    private final AuthEntryPointJwt unauthorizedHandler;
-
     // I remove the ROLE_ prefix because Spring adds this prefix itself when checking the role
     private final static String ROLE_PREFIX = "ROLE_";
     private final static String USER_ROLE = RoleName.ROLE_USER.name().replace(ROLE_PREFIX, "");
     private final static String ADMIN_ROLE = RoleName.ROLE_ADMIN.name().replace(ROLE_PREFIX, "");
+    private final UserDetailsServiceImpl userDetailsService;
+    private final AuthEntryPointJwt unauthorizedHandler;
 
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt unauthorizedHandler) {
         this.userDetailsService = userDetailsService;

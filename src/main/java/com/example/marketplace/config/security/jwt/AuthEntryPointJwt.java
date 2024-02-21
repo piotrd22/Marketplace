@@ -1,4 +1,4 @@
-package com.example.marketplace.security.jwt;
+package com.example.marketplace.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.example.marketplace.security.cors;
+package com.example.marketplace.config.security.cors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

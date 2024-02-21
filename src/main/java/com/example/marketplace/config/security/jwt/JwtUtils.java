@@ -1,6 +1,6 @@
-package com.example.marketplace.security.jwt;
+package com.example.marketplace.config.security.jwt;
 
-import com.example.marketplace.security.services.UserDetailsImpl;
+import com.example.marketplace.config.security.services.UserDetailsImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;

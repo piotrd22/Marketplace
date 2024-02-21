@@ -81,7 +81,7 @@ public class DataInitializer implements CommandLineRunner, Ordered {
                 cartProduct.setProduct(product);
 
                 try {
-                    cartService.addProductToCart(cartProduct, user.getId());
+                    cartService.addProductToCart(cartProduct, user);
                 } catch (RuntimeException e) {
                     logger.error("DataInitializer Error " + e.getMessage());
                 }
@@ -116,7 +116,7 @@ public class DataInitializer implements CommandLineRunner, Ordered {
 
     private Address generateAddress() {
         Address address = new Address();
-        address.setUserId(user.getId());
+        address.setUser(user);
         address.setAddress("ul. Jana 8");
         address.setCity("Gdansk");
         address.setCountry("Poland");
@@ -128,7 +128,7 @@ public class DataInitializer implements CommandLineRunner, Ordered {
     private Payment generatePayment() {
         Payment payment = new Payment();
         payment.setPaymentMethod(PaymentMethod.CARD);
-        payment.setUserId(user.getId());
+        payment.setUser(user);
         return payment;
     }
 
