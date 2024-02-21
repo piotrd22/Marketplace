@@ -1,6 +1,6 @@
 # e-commerce app
 
-A basic e-commerce application where you can browse products, add them to the cart and place orders. The application does not have users, so we have one mock global user. The frontend application allows you to use only some of the functionalities of the backend rest API, you can search for products, add them to the cart, place an order and view order history. There are also endpoints for adding and editing products, categories, etc., but they are not covered on the frontend.
+A basic e-commerce application where you can browse products, add them to the cart and place orders. The frontend application allows you to use only some of the functionalities of the backend rest API, you can search for products, add them to the cart, place an order and view order history. There are also endpoints for adding and editing products, categories, etc., but they are not covered on the frontend.
 
 ## Starting the application
 
@@ -24,6 +24,10 @@ To get to the backend documentation just go to `http://localhost:8080/swagger-ui
 To get to the app's home page, simply go to `http://localhost:5173/` in your browser.
 
 The application will have data because each time the backend is starting, it feeds the database with dummy data.
+
+The application will also contain one user with credentials: 
+- username: piotrd
+- password: password
 
 ## Technology stack
 
