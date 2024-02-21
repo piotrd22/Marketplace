@@ -240,21 +240,22 @@ export default {
       }
     },
     async placeOrder() {
-      try {
-        this.loadingDialog = true;
-        setTimeout(async () => {
+      this.loadingDialog = true;
+      setTimeout(async () => {
+        try {
           const res = await orderService.placeOrder();
           this.loadingDialog = false;
           this.cartStore.setCartSize(0);
           this.$toast.success("Succesfully placed order.");
           this.$router.push({ name: "OrderInfo", params: res?.data });
-        }, 4000);
-      } catch (error) {
-        console.error("placeOrder() Cart.vue: ", error);
-        const errorMessage =
-          error.response?.data.message || "Placing order failed.";
-        this.$toast.error(errorMessage);
-      }
+        } catch (error) {
+          this.loadingDialog = false;
+          console.error("placeOrder() Cart.vue: ", error);
+          const errorMessage =
+            error.response?.data.message || "Placing order failed.";
+          this.$toast.error(errorMessage);
+        }
+      }, 4000);
     },
     updateCartFromResponse(cart) {
       this.cart = cart;
