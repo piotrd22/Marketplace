@@ -20,9 +20,6 @@ public abstract class ProductMapper {
 
     public abstract ProductDto productToProductDto(Product product);
 
-    @Mapping(target = "id", ignore = true)
-    public abstract Product mapProduct(Product product);
-
     @Mapping(source = "categoryIds", target = "categories", qualifiedByName = "categoryIdToCategory")
     public abstract Product addProductDtoToProduct(AddProductDto addProductDto);
 
